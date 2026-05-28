@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Brand Dashboard</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: Arial;
+  background: #f8f5f2;
+  padding: 20px;
+}
+
+h1 { color: #ca762c; margin-bottom: 20px; }
+
+.card {
+  background: white;
+  padding: 20px;
+  margin: 15px 0;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+input[type="text"],
+input[type="number"] {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 12px;
+  border: 1.5px solid #e5d9cc;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  outline: none;
+}
+
+input[type="file"] {
+  margin-bottom: 12px;
+}
+
+input:focus {
+  border-color: #ca762c;
+}
+
+button {
+  padding: 10px 20px;
+  background: #ca762c;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: background 0.2s;
+}
+
+button:hover { background: #a85e20; }
+
+/* Product Grid */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 16px;
+  margin-top: 10px;
+}
+
+.product-item {
+  background: #fff8f2;
+  border: 1.5px solid #f0e0cc;
+  border-radius: 10px;
+  overflow: hidden;
+  text-align: center;
+  padding-bottom: 12px;
+}
+
+.product-item img {
+  width: 100%;
+  height: 160px;
+  object-fit: cover;
+  display: block;
+}
+
+.product-item .no-img {
+  width: 100%;
+  height: 160px;
+  background: #f0e0cc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+}
+
+.product-item h4 {
+  margin: 10px 8px 4px;
+  color: #333;
+  font-size: 0.95rem;
+}
+
+.product-item p {
+  color: #ca762c;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+/* Status message */
+#statusMsg {
+  margin-top: 10px;
+  font-size: 0.9rem;
+  color: green;
+  display: none;
+}
+
+.logout-btn {
+  margin-top: 10px;
+  background: #888;
+}
+.logout-btn:hover { background: #555; }
+
+/* Image preview */
+#imagePreview {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  display: none;
+  border: 2px solid #e5d9cc;
+}
+</style>
+</head>
+
+<body>
+
+<h1>🏢 Brand Dashboard</h1>
+
+<!-- Welcome -->
+<div class="card">
+  <p>👋 Welcome, <strong id="sellerName">Seller</strong>!</p>
+</div>
+
+<!-- Add Product -->
+<div class="card">
+  <h3 style="margin-bottom:14px;">➕ Add Product</h3>
+
+  <label style="font-size:0.9rem;color:#666;">Product Image</label><br>
+  <input type="file" id="image" accept="image/*" onchange="previewImage(event)"><br>
+  <img id="imagePreview" alt="Preview">
+
+  <input type="text" id="pname" placeholder="Product Name">
+  <input type="number" id="price" placeholder="Price (₹)">
+
+  <button onclick="addProduct()">Add Product</button>
+  <p id="statusMsg">✅ Product added successfully!</p>
+</div>
+
+<!-- Product List -->
+<div class="card">
+  <h3 style="margin-bottom:14px;">🛍️ Your Products</h3>
+  <div class="product-grid" id="productGrid">
+    <p style="color:#999;">No products yet.</p>
+  </div>
+</div>
+
+<button class="logout-btn" onclick="logout()">🚪 Logout</button>
+
+<script>
+  // ── Show logged-in seller name ──────────────────────────
+  fetch("/get-user")
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        document.getElementById("sellerName").textContent = data.name;
+      } else {
+        // Not logged in — redirect to login
+        window.location.href = "/brand_login.html";
+      }
+    });
+
+  // ── Preview image before upload ─────────────────────────
+  function previewImage(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const preview = document.getElementById("imagePreview");
+    preview.src = URL.createObjectURL(file);
+    preview.style.display = "block";
+  }
+
+  // ── Add product (sends to server with image) ────────────
+  function addProduct() {
+    const name  = document.getElementById("pname").value.trim();
+    const price = document.getElementById("price").value.trim();
+    const image = document.getElementById("image").files[0];
+
+    if (!name || !price) {
+      alert("Please enter product name and price.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("price", price);
+    if (image) formData.append("image", image);
+
+    fetch("/add-product", {
+      method: "POST",
+      body: formData
+    })
+    .then(res => res.text())
+    .then(response => {
+      console.log(response);
+      // Show success message
+      const msg = document.getElementById("statusMsg");
+      msg.style.display = "block";
+      setTimeout(() => msg.style.display = "none", 2500);
+
+      // Clear inputs
+      document.getElementById("pname").value = "";
+      document.getElementById("price").value = "";
+      document.getElementById("image").value = "";
+      document.getElementById("imagePreview").style.display = "none";
+
+      // Reload products
+      loadProducts();
+    })
+    .catch(err => alert("Error adding product: " + err));
+  }
+
+  // ── Load products from server ───────────────────────────
+  function loadProducts() {
+    fetch("/get-products")
+      .then(res => res.json())
+      .then(products => {
+        const grid = document.getElementById("productGrid");
+        grid.innerHTML = "";
+
+        if (products.length === 0) {
+          grid.innerHTML = "<p style='color:#999;'>No products yet.</p>";
+          return;
+        }
+
+        products.forEach(p => {
+          const div = document.createElement("div");
+          div.className = "product-item";
+
+          if (p.image) {
+            div.innerHTML = `
+              <img src="/uploads/${p.image}" alt="${p.name}">
+              <h4>${p.name}</h4>
+              <p>₹${p.price}</p>
+            `;
+          } else {
+            div.innerHTML = `
+              <div class="no-img">📦</div>
+              <h4>${p.name}</h4>
+              <p>₹${p.price}</p>
+            `;
+          }
+
+          grid.appendChild(div);
+        });
+      });
+  }
+
+  // Load on page start
+  loadProducts();
+
+  // ── Logout ──────────────────────────────────────────────
+  function logout() {
+    fetch("/logout").then(() => {
+      window.location.href = "/index.html";
+    });
+  }
+</script>
+
+</body>
+</html>

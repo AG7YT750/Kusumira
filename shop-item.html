@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="pageTitle">Kusumira · Product</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Satisfy&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; line-height: 1.6; color: #333; background: #f8f8f8; }
+    .container { width: 90%; max-width: 1200px; margin: auto; }
+
+    /* ---------- BREADCRUMB ---------- */
+    .breadcrumb { background: white; border-bottom: 1px solid #f0e0ce; padding: 0.7rem 0; }
+    .breadcrumb-inner { display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; color: #888; }
+    .breadcrumb-inner a { color: #e79b38; text-decoration: none; font-weight: 500; }
+    .breadcrumb-inner a:hover { text-decoration: underline; }
+    .breadcrumb-inner .sep { color: #ccc; }
+
+    /* ---------- LOGIN MODAL ---------- */
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(15,25,35,0.65); backdrop-filter: blur(4px); z-index: 2000; align-items: center; justify-content: center; }
+    .modal-overlay.active { display: flex; }
+    .login-modal { background: #fff; border-radius: 28px; padding: 2.5rem 2.2rem 2rem; width: 100%; max-width: 420px; box-shadow: 0 30px 60px -15px rgba(0,0,0,0.35); animation: modalIn 0.25s ease; position: relative; }
+    @keyframes modalIn { from { opacity:0; transform:translateY(20px) scale(0.97);} to { opacity:1; transform:translateY(0) scale(1);} }
+    .modal-close { position: absolute; top: 1.2rem; right: 1.2rem; background: #f5efe9; border: none; width: 34px; height: 34px; border-radius: 50%; cursor: pointer; color: #3f5568; font-size: 1rem; display: flex; align-items: center; justify-content: center; }
+    .modal-close:hover { background: #e79b38; color: white; }
+    .modal-logo { font-family: 'Satisfy', cursive; font-size: 1.8rem; color: #ca862c; margin-bottom: 0.3rem; }
+    .login-modal h3 { font-size: 1.5rem; color: #1e2e3d; margin-bottom: 0.2rem; }
+    .login-modal .subtitle { color: #7a8fa0; font-size: 0.95rem; margin-bottom: 1.5rem; }
+    .form-group { margin-bottom: 1.1rem; }
+    .form-group label { display: block; font-weight: 600; font-size: 0.9rem; color: #2b4a6b; margin-bottom: 0.4rem; }
+    .form-group input { width: 100%; padding: 0.8rem 1.1rem; border: 1.5px solid #e0d4c5; border-radius: 14px; font-size: 1rem; outline: none; }
+    .form-group input:focus { border-color: #e79b38; box-shadow: 0 0 0 3px rgba(231,155,56,0.15); }
+    .form-footer { display: flex; justify-content: flex-end; margin-bottom: 1.4rem; }
+    .form-footer a { color: #e79b38; font-size: 0.9rem; text-decoration: none; font-weight: 500; }
+    .login-submit { width: 100%; background: #e79b38; border: none; color: white; padding: 1rem; border-radius: 60px; font-weight: 700; font-size: 1.05rem; cursor: pointer; }
+    .login-submit:hover { background: #c77e23; }
+    .divider { display: flex; align-items: center; gap: 1rem; margin: 1.4rem 0; color: #b0bdc9; font-size: 0.85rem; }
+    .divider::before, .divider::after { content:''; flex:1; height:1px; background:#ebe4dc; }
+    .social-login { display: flex; gap: 12px; }
+    .social-login button { flex:1; display:flex; align-items:center; justify-content:center; gap:8px; padding:0.8rem; border:1.5px solid #e0d4c5; border-radius:14px; background:white; cursor:pointer; font-weight:600; }
+    .social-login button:hover { background:#fef5e8; border-color:#e79b38; }
+    .register-link { text-align:center; margin-top:1.4rem; font-size:0.9rem; color:#7a8fa0; }
+    .register-link a { color:#e79b38; font-weight:600; text-decoration:none; }
+
+    /* ---------- PRODUCT DETAILS ---------- */
+    .product-details-section { margin: 40px auto 60px; }
+    .product-details-wrapper { display:flex; gap:50px; flex-wrap:wrap; background:white; border-radius:28px; padding:2.5rem; box-shadow:0 15px 35px -8px rgba(0,40,40,0.15); border:1px solid rgba(231,155,56,0.15); }
+    .product-left { flex:1 1 380px; }
+    .main-product-img { width:100%; height:340px; object-fit:contain; background:#fef5e8; padding:1.8rem; border-radius:30px; border:1px solid #ffe8cf; box-shadow:0 8px 18px -6px rgba(231,155,56,0.2); transition:transform 0.25s ease; }
+    .main-product-img:hover { transform:scale(1.01); }
+    .img-placeholder { width:100%; height:340px; background:#fef5e8; border-radius:30px; border:1px solid #ffe8cf; display:flex; align-items:center; justify-content:center; font-size:5rem; }
+    .thumbnail-row { display:flex; gap:15px; margin-top:20px; flex-wrap:wrap; }
+    .thumbnail-row img { width:85px; height:85px; object-fit:cover; background:#fff7ed; padding:8px; border-radius:18px; border:1px solid #f0d8b6; cursor:pointer; transition:0.2s; }
+    .thumbnail-row img:hover, .thumbnail-row img.active-thumb { border-color:#e79b38; box-shadow:0 8px 15px rgba(231,155,56,0.15); transform:translateY(-3px); }
+    .product-right { flex:1 1 380px; display:flex; flex-direction:column; gap:0.8rem; }
+    .category-label { color:#e79b38; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; font-size:0.9rem; background:#fff0df; display:inline-block; padding:0.3rem 1.2rem; border-radius:40px; width:fit-content; border:1px solid #ffdcb7; }
+    .product-right h2 { font-size:2.5rem; font-weight:700; color:#1e2e3d; margin:0.2rem 0; line-height:1.2; }
+    .price { font-size:2.3rem; font-weight:800; color:#1f3a4e; display:flex; align-items:baseline; gap:0.8rem; margin:0.5rem 0; }
+    .price span { font-size:1.3rem; font-weight:400; color:#9aabbb; text-decoration:line-through; }
+    .product-right p { color:#3f5568; font-size:1rem; max-width:90%; margin:0.2rem 0 0.5rem; }
+    .product-right h4 { font-weight:700; color:#2b4a6b; margin:0.8rem 0 0.5rem; font-size:1.1rem; }
+    .size-options { display:flex; gap:15px; flex-wrap:wrap; margin:0.5rem 0 1rem; }
+    .size-options .size-btn { background:white; border:1.5px solid #e0cfbc; color:#3f5568; font-weight:600; padding:0.7rem 1.8rem; border-radius:60px; font-size:0.95rem; box-shadow:0 4px 8px #f0e5d8; transition:all 0.15s; cursor:pointer; }
+    .size-options .size-btn:hover, .size-options .size-btn.active { background:#e79b38; border-color:#e79b38; color:white; }
+    .color-options { display:flex; gap:12px; flex-wrap:wrap; margin:0.5rem 0 1rem; align-items:center; }
+    .color-swatch { width:34px; height:34px; border-radius:50%; cursor:pointer; border:3px solid transparent; transition:all 0.15s; box-shadow:0 2px 6px rgba(0,0,0,0.12); }
+    .color-swatch:hover, .color-swatch.active { border-color:#e79b38; transform:scale(1.15); }
+    .quantity-cart { margin-top:25px; display:flex; gap:20px; align-items:center; flex-wrap:wrap; }
+    .quantity-cart input { width:85px; padding:0.9rem 0.5rem; font-size:1.2rem; font-weight:600; text-align:center; border:2px solid #f0d8b6; border-radius:60px; background:white; color:#1f3a4e; outline:none; }
+    .quantity-cart input:focus { border-color:#e79b38; }
+    .add-cart-btn { background:#e79b38; border:none; padding:0.9rem 3rem; color:white; border-radius:60px; font-weight:700; font-size:1.1rem; cursor:pointer; transition:0.2s; }
+    .add-cart-btn:hover { background:#c77e23; transform:scale(1.02); }
+    .product-badges { display:flex; gap:10px; flex-wrap:wrap; margin:0.5rem 0; }
+    .badge { background:#fff0df; color:#c07018; font-size:0.8rem; font-weight:600; padding:0.3rem 0.9rem; border-radius:40px; border:1px solid #ffdcb7; }
+    .rating-row { display:flex; align-items:center; gap:0.6rem; margin:0.4rem 0; }
+    .rating-row .stars { color:#f8b84a; font-size:1.1rem; }
+    .rating-row .num { font-weight:800; font-size:1.1rem; color:#1f3a4e; }
+    .rating-row .cnt { color:#888; font-size:0.9rem; }
+
+    /* ---------- REVIEWS ---------- */
+    .reviews-section { background:white; border-radius:30px; padding:2rem 2.2rem; margin-bottom:60px; box-shadow:0 15px 30px -10px rgba(0,0,0,0.05); border:1px solid #f0e0ce; }
+    .reviews-header { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; margin-bottom:1.5rem; }
+    .reviews-header h2 { font-size:1.8rem; color:#1f2e40; display:flex; align-items:center; gap:8px; }
+    .rating-summary { display:flex; align-items:center; gap:0.8rem; flex-wrap:wrap; }
+    .big-rating { font-size:2.5rem; font-weight:800; color:#1f3a4e; }
+    .stars-container { color:#f8b84a; font-size:1.5rem; letter-spacing:3px; }
+    .review-count { color:#53718b; font-weight:500; border-left:2px solid #e7c9a8; padding-left:1rem; }
+    .write-review-btn { background:#e79b38; border:none; color:white; padding:0.8rem 2rem; border-radius:60px; font-weight:600; cursor:pointer; font-size:1rem; }
+    .write-review-btn:hover { background:#c77e23; }
+    .star-filters { display:flex; flex-wrap:wrap; gap:0.8rem; margin:1.8rem 0 0.5rem; }
+    .filter-chip { background:#f5efe9; padding:0.4rem 1.4rem; border-radius:40px; font-weight:500; color:#3b5e7a; border:1px solid #eddccb; cursor:pointer; }
+    .filter-chip i { color:#f5b342; margin-right:4px; }
+    .filter-chip:hover { background:#e79b38; color:white; border-color:#e79b38; }
+
+    /* ---------- NOT FOUND ---------- */
+    .not-found { text-align:center; padding:5rem 2rem; }
+    .not-found h2 { font-size:2rem; color:#1e2e3d; margin-bottom:1rem; }
+    .not-found a { color:#e79b38; font-weight:600; text-decoration:none; font-size:1.1rem; }
+
+    /* ---------- FOOTER ---------- */
+    footer { background:#e79b38; color:#000; padding:50px 20px; }
+    .footer-container { max-width:1200px; margin:auto; display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:30px; }
+    .footer-col h3 { color:#000; margin-bottom:15px; font-size:18px; position:relative; }
+    .footer-col h3::after { content:''; width:50px; height:2px; background:#000; position:absolute; left:0; bottom:-5px; }
+    .footer-col p { line-height:1.6; font-size:14px; }
+    .footer-col ul { list-style:none; }
+    .footer-col ul li { margin:10px 0; }
+    .footer-col ul li a { text-decoration:none; color:#000; font-size:14px; transition:0.3s; }
+    .footer-col ul li a:hover { color:#fff; padding-left:5px; }
+    .social-links a { display:inline-block; width:35px; height:35px; line-height:35px; text-align:center; margin:0 8px 0 0; border-radius:50%; background:#000; color:#fff; transition:0.3s; }
+    .social-links a:hover { background:#fff; color:#ca862c; }
+    .newsletter input { padding:10px; width:70%; border:none; outline:none; border-radius:25px; margin-top:10px; }
+    .newsletter button { padding:10px 20px; border:none; background:#080808; color:#fff; border-radius:0 25px 25px; cursor:pointer; margin:10px; }
+    .newsletter button:hover { background:#fff; color:#c77e23; }
+    .footer-bottom { text-align:center; margin-top:40px; border-top:1px solid #333; padding-top:20px; font-size:14px; color:#000; }
+
+    /* ---------- TOAST ---------- */
+    .toast-message { position:fixed; bottom:25px; left:25px; background:#1e2e3d; color:white; padding:0.8rem 2rem; border-radius:60px; font-weight:500; box-shadow:0 10px 25px rgba(0,0,0,0.2); opacity:0; transition:opacity 0.2s; pointer-events:none; z-index:9999; }
+
+    @media (max-width:768px) {
+      .product-details-wrapper { padding:1.5rem; }
+      .reviews-header { flex-direction:column; align-items:flex-start; gap:1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Toast -->
+<div class="toast-message" id="toastMsg"></div>
+
+<!-- ── PRODUCT DATABASE ─────────────────────────────────── -->
+<script>
+  window.KUSUMIRA_PRODUCTS = [
+    { id:"rose-gold",           name:"Rose Gold",          category:"🌸 Flowers",   price:549, originalPrice:699, image:"rose.PNG",        rating:4.8, reviewCount:214, description:"A timeless crochet rose crafted with gold-tipped yarn, perfect as a bouquet accent or standalone décor piece. Each petal is individually shaped by hand for lifelike elegance.",                                                                    badges:["🧶 Handmade","🌿 Eco-Friendly","✨ Artisan Craft"],  colors:["#e8a0a0","#f5c5c5","#d4915a","#c8a0c8"],       sizes:["Single","Pair","Bouquet of 3"] },
+    { id:"lavender-sprig",      name:"Lavender Sprig",     category:"🌸 Flowers",   price:399, originalPrice:499, image:"lanvendar.png",   rating:4.6, reviewCount:87,  description:"Soft purple lavender sprigs crocheted with premium cotton yarn. Aromatherapy-inspired design that never wilts — a forever gift for any occasion.",                                                                                         badges:["🧶 Handmade","💜 Calming Vibes"],                   colors:["#c8a0c8","#b09ac0","#9988b0","#e0d0f0"],       sizes:["Single","Bundle of 3","Bundle of 5"] },
+    { id:"sunflower",           name:"Sunflower",          category:"🌸 Flowers",   price:449, originalPrice:549, image:"sunflower.PNG",   rating:4.9, reviewCount:312, description:"Bright and cheerful crochet sunflower with a contrasting brown centre and golden petals. A burst of sunshine for your home — potted or as a gifting stem.",                                                                                 badges:["🧶 Handmade","☀️ Fan Favourite","✨ Artisan Craft"], colors:["#f5d060","#f0c040","#e8b030","#ffe080"],       sizes:["Small","Medium","Large"] },
+    { id:"daisy-chain",         name:"Daisy Chain",        category:"🌸 Flowers",   price:379, originalPrice:449, image:"daisy.webp",      rating:4.5, reviewCount:143, description:"Delicate white daisies linked into a charming chain. Great as a hair accessory, wreath accent, or decorative garland. Light, durable, and washable.",                                                                                         badges:["🧶 Handmade","🌼 Everyday Joy"],                    colors:["#ffffff","#f5f0e0","#e8f0d8","#f0e8ff"],       sizes:["30 cm","50 cm","100 cm"] },
+    { id:"mini-bear",           name:"Mini Bear",          category:"🔑 Keychains", price:299, originalPrice:349, image:"bear.JPG",        rating:4.9, reviewCount:521, description:"Adorable amigurumi bear keychain crocheted with soft acrylic yarn. Comes with a sturdy metal ring. The perfect bag charm or gift for bear lovers of all ages.",                                                                               badges:["🧶 Handmade","🐻 Best Seller","🎁 Great Gift"],      colors:["#d4a574","#a08060","#f5d0b0","#808080"],       sizes:["5 cm","7 cm","10 cm"] },
+    { id:"cactus-keychain",     name:"Cactus",             category:"🔑 Keychains", price:249, originalPrice:299, image:"sunkey.JPG",      rating:4.7, reviewCount:198, description:"A quirky mini crochet cactus keychain that's impossible not to smile at. Made with green cotton yarn and tiny details — no watering required!",                                                                                              badges:["🧶 Handmade","🌵 Trendy"],                         colors:["#7da87b","#5a8a58","#a0c898","#4a7048"],       sizes:["5 cm","8 cm"] },
+    { id:"rain-cloud",          name:"Rain Cloud",         category:"🔑 Keychains", price:279, originalPrice:329, image:"batterfly.JPG",   rating:4.6, reviewCount:76,  description:"A whimsical crochet rain cloud keychain with tiny dangling raindrops in blue yarn. Soft, puffy, and utterly charming — brightens any gloomy day.",                                                                                         badges:["🧶 Handmade","⛅ Mood Booster"],                   colors:["#8fa8c8","#b0c8e8","#d0e0f8","#c8c8d8"],       sizes:["6 cm","9 cm"] },
+    { id:"strawberry-keychain", name:"Strawberry",         category:"🔑 Keychains", price:269, originalPrice:319, image:"stawri.jpeg",     rating:4.8, reviewCount:267, description:"Sweet crochet strawberry keychain with seed-stitch detailing and a green leaf top. Made with soft cotton — a fruity fashion statement for bags and keys.",                                                                                  badges:["🧶 Handmade","🍓 Super Cute","🎁 Great Gift"],       colors:["#e05050","#c83838","#e87070","#f0a0a0"],       sizes:["5 cm","8 cm"] },
+    { id:"crochet-dahlia",      name:"Crochet Dahlia",     category:"🌼 Flowers",   price:299, originalPrice:379, image:"image3.jpg",      rating:4.7, reviewCount:103, description:"A bold, layered crochet dahlia with rich petal depth. Crafted using variegated yarn for a natural gradient effect. Perfect for home décor or as a gift.",                                                                                    badges:["🧶 Handmade","🌸 Statement Piece"],                 colors:["#c060a0","#a04080","#e080c0","#802060"],       sizes:["Small","Medium","Large"] },
+    { id:"woolly-teddy",        name:"Woolly Teddy",       category:"🧸 Dolls",     price:499, originalPrice:599, image:"rose.png",        rating:4.9, reviewCount:445, description:"A huggable amigurumi teddy bear crocheted with ultra-soft wool blend yarn. Safe for children (3+). Comes gift-wrapped with a handwritten Kusumira tag.",                                                                                     badges:["🧶 Handmade","🐻 Kid Safe","🎁 Bestseller"],         colors:["#d4a574","#a08060","#f5d0b0","#e0b898"],       sizes:["15 cm","25 cm","35 cm"] },
+    { id:"potted-succulent",    name:"Potted Succulent",   category:"🏺 Pots",      price:349, originalPrice:429, image:"keychain1.jpg",   rating:4.5, reviewCount:89,  description:"A lifelike crochet succulent in a tiny terracotta-style pot. Zero maintenance, all aesthetic. Ideal for desks, shelves, or as a housewarming gift.",                                                                                         badges:["🧶 Handmade","🌵 Low Maintenance","🏺 Pot Included"],colors:["#7da87b","#5a8a58","#a8c890","#4a8048"],       sizes:["Mini (8cm)","Medium (12cm)","Large (18cm)"] },
+    { id:"boho-bag",            name:"Boho Bag",           category:"👜 Bags",      price:799, originalPrice:999, image:"lanvendar.png",   rating:4.8, reviewCount:312, description:"A stunning boho crochet tote handcrafted by skilled artisans using 100% natural cotton yarn. Spacious, stylish, and strong — perfect for beach, market, or a casual day out.",                                                              badges:["🧶 Handmade","🌿 Eco-Friendly","✨ Artisan Craft"],  colors:["#d4915a","#7da87b","#8fa8c8","#c8a0c8","#e8d890"],sizes:["Small","Medium","Large"] },
+    { id:"market-tote",         name:"Market Tote",        category:"👜 Bags",      price:699, originalPrice:849, image:"batterfly.jpg",   rating:4.6, reviewCount:178, description:"Open-weave crochet market tote — breathable, lightweight, and roomy enough for your weekend haul. Made with recycled cotton twine by artisan women's collectives.",                                                                         badges:["🧶 Handmade","♻️ Recycled Cotton","🌿 Eco-Friendly"],colors:["#c8a888","#a08870","#e0c8a8","#808070"],       sizes:["Standard","Large"] },
+    { id:"baby-booties",        name:"Baby Booties",       category:"👶 Baby",      price:399, originalPrice:479, image:"sunflower.png",   rating:5.0, reviewCount:567, description:"Cloud-soft crochet baby booties made with hypoallergenic merino wool. Non-slip sole, easy-on elastic cuff. The sweetest baby shower gift — comes in a gift box.",                                                                           badges:["🧶 Handmade","👶 Baby Safe","🎁 Gift Box Included"], colors:["#f5d0b0","#d0e8f8","#f0d8e8","#d8f0d0"],       sizes:["0–3 months","3–6 months","6–12 months"] },
+    { id:"lace-doily",          name:"Lace Doily",         category:"🕯️ Coasters", price:249, originalPrice:299, image:"bottle.jpeg",     rating:4.4, reviewCount:62,  description:"Intricate crochet lace doily in crisp white cotton. Perfect as a table centrepiece, frame insert, or vase base. Machine washable. Sold individually or as a set.",                                                                          badges:["🧶 Handmade","🤍 Classic Design"],                  colors:["#ffffff","#f8f0e0","#f0e8d0"],                 sizes:["15 cm","25 cm","35 cm"] },
+    { id:"amigurumi-bunny",     name:"Amigurumi Bunny",    category:"🧸 Dolls",     price:599, originalPrice:749, image:"bunny.jpg",       rating:4.9, reviewCount:389, description:"A floppy-eared crochet bunny stuffed with hypoallergenic fiberfill. Hand-embroidered face details, poseable ears, and a tiny bow. Children's favourite and collector's delight.",                                                         badges:["🧶 Handmade","🐰 Fan Favourite","🎁 Gift Ready"],    colors:["#f5f0e8","#e0d8c8","#d0c8b8","#c8b8a8"],       sizes:["15 cm","25 cm","40 cm"] },
+    { id:"phone-sling",         name:"Phone Sling",        category:"👜 Bags",      price:459, originalPrice:559, image:"bouquet.webp",    rating:4.7, reviewCount:134, description:"Hands-free crochet phone sling bag with adjustable strap and card pocket. Fits most smartphones up to 6.7\". Stylish and practical — made in cotton-linen blend.",                                                                         badges:["🧶 Handmade","📱 Phone Friendly","✨ Trending"],     colors:["#d4915a","#7da87b","#8fa8c8","#c8a0c8"],       sizes:["Standard (fits up to 6.7\")"] },
+    { id:"coaster-set",         name:"Coaster Set",        category:"🕯️ Coasters", price:199, originalPrice:249, image:"coaster.jpg",     rating:4.5, reviewCount:203, description:"Set of 4 round crochet coasters in mixed earth tones. Thick, absorbent, and heat-resistant up to 80°C. A simple upgrade for any table — handmade with love.",                                                                             badges:["🧶 Handmade","🏡 Home Décor","Set of 4"],            colors:["#d4915a","#7da87b","#8fa8c8","#e8d890"],       sizes:["Set of 4","Set of 6"] },
+  ];
+</script>
+
+<!-- ── LOGIN MODAL ──────────────────────────────────────── -->
+<div class="modal-overlay" id="loginModal">
+  <div class="login-modal">
+    <button class="modal-close" id="closeModal"><i class="fas fa-times"></i></button>
+    <div class="modal-logo">Kusumira</div>
+    <h3>Welcome back 👋</h3>
+    <p class="subtitle">Sign in to your account to continue shopping</p>
+    <div class="form-group">
+      <label><i class="fas fa-envelope" style="color:#e79b38;margin-right:6px;"></i>Email Address</label>
+      <input type="email" id="emailInput" placeholder="you@example.com">
+    </div>
+    <div class="form-group">
+      <label><i class="fas fa-lock" style="color:#e79b38;margin-right:6px;"></i>Password</label>
+      <input type="password" id="passwordInput" placeholder="••••••••">
+    </div>
+    <div class="form-footer"><a href="#">Forgot password?</a></div>
+    <button class="login-submit" id="loginSubmit"><i class="fas fa-sign-in-alt"></i> Sign In</button>
+    <div class="divider">or continue with</div>
+    <div class="social-login">
+      <button><i class="fab fa-google" style="color:#e34234;"></i> Google</button>
+      <button><i class="fab fa-facebook-f" style="color:#1877f2;"></i> Facebook</button>
+    </div>
+    <div class="register-link">Don't have an account? <a href="signup.html">Create one free</a></div>
+  </div>
+</div>
+
+<!-- ── nav-component.js injects the header here ─────────── -->
+
+<!-- ── BREADCRUMB ───────────────────────────────────────── -->
+<nav class="breadcrumb">
+  <div class="container breadcrumb-inner">
+    <a href="shop.html"><i class="fas fa-store" style="margin-right:4px;"></i> Shop</a>
+    <span class="sep">›</span>
+    <span id="breadcrumbCategory">–</span>
+    <span class="sep">›</span>
+    <span id="breadcrumbName" style="color:#333;font-weight:600;">–</span>
+  </div>
+</nav>
+
+<!-- ── PRODUCT DETAILS ──────────────────────────────────── -->
+<section class="product-details-section container" id="productSection">
+  <div style="text-align:center;padding:4rem;color:#888;">Loading product…</div>
+</section>
+
+<!-- ── REVIEWS ──────────────────────────────────────────── -->
+<section class="container reviews-section" id="reviewsSection" style="display:none;">
+  <div class="reviews-header">
+    <h2><i class="far fa-star" style="color:#e79b38;"></i> Rating & Reviews</h2>
+    <div class="rating-summary">
+      <span class="big-rating" id="bigRating">–</span>
+      <span class="stars-container" id="starsContainer"></span>
+      <span class="review-count" id="reviewCountLabel">–</span>
+    </div>
+    <button class="write-review-btn" id="writeReviewBtn"><i class="fas fa-pen"></i> Write a Review</button>
+  </div>
+  <div class="star-filters">
+    <span class="filter-chip"><i class="fas fa-star"></i> 5 Star</span>
+    <span class="filter-chip"><i class="fas fa-star"></i> 4 Star</span>
+    <span class="filter-chip"><i class="fas fa-star"></i> 3 Star</span>
+    <span class="filter-chip"><i class="fas fa-star"></i> 2 Star</span>
+    <span class="filter-chip"><i class="fas fa-star"></i> 1 Star</span>
+  </div>
+  <div style="background:#fef9f3;border-radius:24px;padding:1.5rem;margin-top:1.5rem;border:1px solid #ffe1c2;">
+    <h4 style="display:flex;align-items:center;gap:0.5rem;color:#2f4a62;margin-bottom:0.8rem;">
+      <i class="far fa-file-lines"></i> Product Description
+    </h4>
+    <p id="reviewDescText" style="color:#3b556b;"></p>
+  </div>
+</section>
+
+<!-- ── FOOTER ───────────────────────────────────────────── -->
+<footer>
+  <div class="footer-container">
+    <div class="footer-col">
+      <h3>Kusumira</h3>
+      <p style="margin-bottom:1.2rem;">Rooted in Indian craftsmanship, we create heirloom-quality crochet with contemporary soul. Every purchase empowers women artisans.</p>
+      <div class="social-links">
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-facebook-f"></i></a>
+        <a href="#"><i class="fab fa-pinterest"></i></a>
+        <a href="#"><i class="fab fa-youtube"></i></a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h3>Explore</h3>
+      <ul>
+        <li><a href="shop.html">Shop all</a></li>
+        <li><a href="shop.html">New arrivals</a></li>
+        <li><a href="#">Gift sets</a></li>
+        <li><a href="#">Custom order</a></li>
+        <li><a href="about.html">Artisan stories</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h3>Support</h3>
+      <ul>
+        <li><a href="contect.html">Contact</a></li>
+        <li><a href="#">Shipping</a></li>
+        <li><a href="#">Returns</a></li>
+        <li><a href="#">Care guide</a></li>
+        <li><a href="#">Privacy</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h3>Newsletter</h3>
+      <p style="margin-bottom:0.5rem;">Be the first to know about limited drops.</p>
+      <div class="newsletter">
+        <input type="email" placeholder="Your email">
+        <button>Join</button>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">© 2026 Kusumira — handcrafted with 💛 in India</div>
+</footer>
+
+<!-- ── MAIN SCRIPT ───────────────────────────────────────── -->
+<script>
+(function () {
+  /* ── Toast ──────────────────────────── */
+  const toast = document.getElementById('toastMsg');
+  function showMsg(text) {
+    toast.textContent = text;
+    toast.style.opacity = '1';
+    setTimeout(() => { toast.style.opacity = '0'; }, 2200);
+  }
+
+  /* ── Stars HTML ─────────────────────── */
+  function starHTML(rating) {
+    const full  = Math.floor(rating);
+    const half  = rating % 1 >= 0.5 ? 1 : 0;
+    const empty = 5 - full - half;
+    return (
+      '<i class="fas fa-star"></i>'.repeat(full) +
+      (half ? '<i class="fas fa-star-half-alt"></i>' : '') +
+      '<i class="far fa-star"></i>'.repeat(empty)
+    );
+  }
+
+  /* ── Read product id from URL ───────── */
+  const params    = new URLSearchParams(window.location.search);
+  const productId = params.get('id');
+  const product   = productId
+    ? window.KUSUMIRA_PRODUCTS.find(p => p.id === productId)
+    : null;
+
+  /* ── Not found ──────────────────────── */
+  if (!product) {
+    document.getElementById('productSection').innerHTML = `
+      <div class="not-found">
+        <div style="font-size:4rem;">🧶</div>
+        <h2>Product not found</h2>
+        <p style="color:#888;margin:0.8rem 0 1.5rem;">We couldn't find the item you're looking for.</p>
+        <a href="shop.html">← Back to Shop</a>
+      </div>`;
+    return;
+  }
+
+  /* ── Page title & breadcrumb ────────── */
+  document.getElementById('pageTitle').textContent            = `Kusumira · ${product.name}`;
+  document.getElementById('breadcrumbCategory').textContent   = product.category;
+  document.getElementById('breadcrumbName').textContent       = product.name;
+
+  /* ── Build HTML pieces ──────────────── */
+  const swatchesHTML = product.colors.map((c, i) =>
+    `<div class="color-swatch${i===0?' active':''}" style="background:${c};" title="${c}"
+      onclick="window._selectColor(this,'${c}')"></div>`
+  ).join('');
+
+  const sizesHTML = product.sizes.map((s, i) =>
+    `<button class="size-btn${i===0?' active':''}">${s}</button>`
+  ).join('');
+
+  const badgesHTML = product.badges.map(b =>
+    `<span class="badge">${b}</span>`
+  ).join('');
+
+  const discountPct = Math.round((1 - product.price / product.originalPrice) * 100);
+
+  /* ── Render product ─────────────────── */
+  document.getElementById('productSection').innerHTML = `
+    <div class="product-details-wrapper">
+      <div class="product-left">
+        <img class="main-product-img" id="mainImg" src="${product.image}" alt="${product.name}"
+          onerror="this.style.display='none';document.getElementById('imgFallback').style.display='flex';">
+        <div class="img-placeholder" id="imgFallback" style="display:none;">🧶</div>
+        <div class="thumbnail-row" id="thumbRow">
+          <img src="${product.image}" alt="view 1" class="active-thumb" onerror="this.style.display='none'">
+          <img src="${product.image}" alt="view 2" onerror="this.style.display='none'">
+          <img src="${product.image}" alt="view 3" onerror="this.style.display='none'">
+        </div>
+      </div>
+      <div class="product-right">
+        <span class="category-label"><i class="fas fa-tag"></i> ${product.category}</span>
+        <h2>${product.name}</h2>
+        <div class="rating-row">
+          <span class="stars" style="color:#f8b84a;">${starHTML(product.rating)}</span>
+          <span class="num">${product.rating}</span>
+          <span class="cnt">(${product.reviewCount.toLocaleString()} reviews)</span>
+        </div>
+        <div class="product-badges">${badgesHTML}</div>
+        <div class="price">
+          ₹${product.price.toLocaleString()}
+          <span>₹${product.originalPrice.toLocaleString()}</span>
+          <small style="font-size:0.9rem;color:#2ecc71;font-weight:700;">${discountPct}% off</small>
+        </div>
+        <p>${product.description}</p>
+        <h4><i class="fas fa-palette"></i> Colour</h4>
+        <div class="color-options">${swatchesHTML}</div>
+        <h4><i class="fas fa-ruler"></i> Size / Variant</h4>
+        <div class="size-options">${sizesHTML}</div>
+        <div class="quantity-cart">
+          <input type="number" value="1" min="1" id="quantityInput">
+          <button class="add-cart-btn" id="addToCartBtn">
+            <i class="fas fa-cart-plus"></i> Add to Cart
+          </button>
+        </div>
+      </div>
+    </div>`;
+
+  /* ── Reviews section ────────────────── */
+  document.getElementById('reviewsSection').style.display    = '';
+  document.getElementById('bigRating').textContent           = product.rating.toFixed(1);
+  document.getElementById('starsContainer').innerHTML        = starHTML(product.rating);
+  document.getElementById('reviewCountLabel').textContent    = `(${product.reviewCount.toLocaleString()} Reviews)`;
+  document.getElementById('reviewDescText').textContent      = product.description;
+
+  /* ── Colour swatch ──────────────────── */
+  window._selectColor = function(el, name) {
+    document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
+    el.classList.add('active');
+    showMsg(`🎨 Colour selected`);
+  };
+
+  /* ── Size buttons ───────────────────── */
+  document.addEventListener('click', function(e) {
+    const btn = e.target.closest('.size-btn');
+    if (!btn) return;
+    document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    showMsg(`📏 Size "${btn.innerText}" selected`);
+  });
+
+  /* ── Add to cart ────────────────────── */
+  document.getElementById('addToCartBtn').addEventListener('click', () => {
+    const qty = document.getElementById('quantityInput').value || 1;
+
+    // Save to cart in localStorage
+    try {
+      const cart = JSON.parse(localStorage.getItem('ku_cart') || '[]');
+      const existing = cart.find(i => i.id === product.id);
+      if (existing) {
+        existing.qty = (existing.qty || 1) + parseInt(qty);
+      } else {
+        cart.push({ id: product.id, name: product.name, price: product.price, image: product.image, qty: parseInt(qty) });
+      }
+      localStorage.setItem('ku_cart', JSON.stringify(cart));
+    } catch(e) {}
+
+    showMsg(`🛒 Added ${qty} × ${product.name} to cart!`);
+
+      setTimeout(() => {
+       window.location.href = "cart.html";
+        }, 1200);
+  });
+  
+  /* ── Thumbnail click ────────────────── */
+  document.getElementById('thumbRow').addEventListener('click', function(e) {
+    const img = e.target.closest('img');
+    if (!img) return;
+    document.getElementById('mainImg').src = img.src;
+    document.querySelectorAll('#thumbRow img').forEach(t => t.classList.remove('active-thumb'));
+    img.classList.add('active-thumb');
+  });
+
+  /* ── Review filters ─────────────────── */
+  document.getElementById('writeReviewBtn').addEventListener('click', () => showMsg('✍️ Review feature coming soon!'));
+  document.querySelectorAll('.filter-chip').forEach(chip => {
+    chip.addEventListener('click', () => showMsg(`⭐ Filter: ${chip.innerText.trim()}`));
+  });
+
+  /* ── Login modal (wired AFTER nav loads) */
+  const loginModal = document.getElementById('loginModal');
+  const closeModal = document.getElementById('closeModal');
+
+  closeModal.addEventListener('click', () => loginModal.classList.remove('active'));
+  loginModal.addEventListener('click', e => { if (e.target === loginModal) loginModal.classList.remove('active'); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') loginModal.classList.remove('active'); });
+
+  // nav-component.js login btn redirects to signup.html — that's correct, no wiring needed here
+
+  document.getElementById('loginSubmit').addEventListener('click', () => {
+    const email = document.getElementById('emailInput').value.trim();
+    if (!email) { showMsg('⚠️ Please enter your email'); return; }
+    loginModal.classList.remove('active');
+    localStorage.setItem('ku_user_name', email.split('@')[0]);
+    showMsg('✅ Logged in successfully!');
+  });
+
+})();
+</script>
+
+<!-- ── Set active page, then load nav ───────────────────── -->
+<script>window.KU_ACTIVE_PAGE = 'shop';</script>
+<script src="nav-component.js"></script>
+</body>
+</html>

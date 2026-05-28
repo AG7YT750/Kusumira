@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kusumira · Contact</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Satisfy&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #f9f5ef;
+      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      color: #2f2e2b;
+      line-height: 1.5;
+    }
+
+    .container {
+      width: 90%;
+      max-width: 1280px;
+      margin: auto;
+    }
+
+    /* ===== HEADER ===== */
+    .header {
+      background: url('header.JPG') center/cover no-repeat;
+      padding: 1rem 0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+    }
+
+    .header-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+    }
+
+    .logo {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #ca862c;
+      font-family: 'Satisfy', cursive;
+      letter-spacing: 0.05em;
+      flex-shrink: 0;
+    }
+
+    .nav a {
+      margin: 0 0.8rem;
+      text-decoration: none;
+      color: rgba(255,255,255,0.85);
+      font-weight: 500;
+      font-size: 0.97rem;
+      transition: color 0.2s;
+    }
+    .nav a:hover { color: #e8a265; }
+
+    /* Search */
+    .search-wrapper { position: relative; flex: 0 1 270px; }
+    .search-bar {
+      display: flex;
+      align-items: center;
+      background: rgba(255,255,255,0.1);
+      border: 1.5px solid rgba(255,255,255,0.2);
+      border-radius: 50px;
+      padding: 0.44rem 0.8rem 0.44rem 1.1rem;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .search-bar:focus-within {
+      background: rgba(255,255,255,0.18);
+      border-color: #e8a265;
+      box-shadow: 0 0 0 3px rgba(215, 139, 8, 0.2);
+    }
+    .search-bar input {
+      background: transparent;
+      border: none;
+      outline: none;
+      color: #fff;
+      font-size: 0.93rem;
+      width: 100%;
+    }
+    .search-bar input::placeholder { color: rgba(255,255,255,0.5); }
+    .search-bar button {
+      background: transparent;
+      border: none;
+      color: rgba(255,255,255,0.65);
+      cursor: pointer;
+      font-size: 0.95rem;
+      padding: 0 0.3rem;
+      transition: color 0.2s;
+      flex-shrink: 0;
+    }
+    .search-bar button:hover { color: #e8a265; }
+
+    .search-suggestions {
+      display: none;
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0; right: 0;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 15px 35px -8px rgba(90,50,20,0.25);
+      border: 1px solid #eddccb;
+      overflow: hidden;
+      z-index: 300;
+    }
+    .search-suggestions.show { display: block; }
+    .suggestion-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0.72rem 1.1rem;
+      font-size: 0.9rem;
+      color:#ca862c;
+      cursor: pointer;
+      transition: background 0.1s;
+    }
+    .suggestion-item i { color: #ca862c; width: 16px; }
+    .suggestion-item:hover { background: #fef5eb; }
+    .suggestion-item:not(:last-child) { border-bottom: 1px solid #f5e4d3; }
+
+    /* Header actions */
+    .header-actions { display: flex; align-items: center; gap: 0.75rem; flex-shrink: 0; }
+
+    .login-btn {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      background: transparent;
+      border: 1.5px solid rgba(255,255,255,0.35);
+      color: rgba(255,255,255,0.9);
+      border-radius: 50px;
+      padding: 0.48rem 1.1rem;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.92rem;
+      transition: all 0.2s;
+    }
+    .login-btn:hover { background: rgba(255,255,255,0.1); border-color: #e8a265; color: #e8a265; }
+
+    .cart-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: #de8b05;
+      color: white;
+      border: none;
+      border-radius: 50px;
+      padding: 0.48rem 1.1rem;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.92rem;
+      transition: background 0.2s;
+    }
+    .cart-btn:hover { background: #8f4a1e; }
+
+    /* ===== LOGIN MODAL ===== */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(20,10,5,0.65);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-overlay.active { display: flex; }
+
+    .login-modal {
+      background: #fff;
+      border-radius: 28px;
+      padding: 2.5rem 2.2rem 2rem;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 30px 60px -15px rgba(90,40,10,0.4);
+      animation: modalIn 0.25s ease;
+      position: relative;
+    }
+    @keyframes modalIn {
+      from { opacity: 0; transform: translateY(20px) scale(0.97); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 1.2rem; right: 1.2rem;
+      background: #f5ece2;
+      border: none;
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      cursor: pointer;
+      color: #5f4535;
+      font-size: 1rem;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.15s;
+    }
+    .modal-close:hover { background: #b45f2b; color: white; }
+
+    .modal-logo {
+      font-family: 'Satisfy', cursive;
+      font-size: 1.9rem;
+      font-weight: 700;
+      color: #ca862c;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.3rem;
+    }
+    .login-modal h3 { font-size: 1.45rem; color: #2e1f10; margin-bottom: 0.2rem; }
+    .login-modal .subtitle { color: #8a7060; font-size: 0.93rem; margin-bottom: 1.5rem; }
+
+    .modal-field { margin-bottom: 1.1rem; }
+    .modal-field label {
+      display: block;
+      font-weight: 600;
+      font-size: 0.88rem;
+      color: #ca862c;
+      margin-bottom: 0.4rem;
+    }
+    .modal-field input {
+      width: 100%;
+      padding: 0.78rem 1.1rem;
+      border: 1.5px solid #e2c9b4;
+      border-radius: 14px;
+      font-size: 0.97rem;
+      outline: none;
+      color: #2e1f10;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .modal-field input:focus { border-color: #ca862c; box-shadow: 0 0 0 3px rgba(180,95,43,0.15); }
+    .modal-field input::placeholder { color: #b8a898; }
+
+    .modal-footer-link { display: flex; justify-content: flex-end; margin-bottom: 1.3rem; }
+    .modal-footer-link a { color: #ca862c; font-size: 0.88rem; text-decoration: none; font-weight: 500; }
+    .modal-footer-link a:hover { text-decoration: underline; }
+
+    .login-submit {
+      width: 100%;
+      background: #ca862c;
+      border: none;
+      color: white;
+      padding: 1rem;
+      border-radius: 60px;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 10px 20px -8px rgba(180,95,43,0.55);
+      transition: 0.2s;
+    }
+    .login-submit:hover { background: #8f4a1e; transform: scale(1.01); }
+
+    .modal-divider {
+      display: flex; align-items: center; gap: 1rem;
+      margin: 1.3rem 0;
+      color: #b8a898; font-size: 0.85rem;
+    }
+    .modal-divider::before, .modal-divider::after { content: ''; flex: 1; height: 1px; background: #ecddd2; }
+
+    .social-login { display: flex; gap: 12px; }
+    .social-login button {
+      flex: 1; display: flex; align-items: center; justify-content: center;
+      gap: 8px; padding: 0.75rem;
+      border: 1.5px solid #e2c9b4; border-radius: 14px;
+      background: white; cursor: pointer;
+      font-weight: 600; font-size: 0.9rem; color: #4d3526;
+      transition: 0.15s;
+    }
+    .social-login button:hover { background: #fef5eb; border-color: #b45f2b; }
+
+    .register-link { text-align: center; margin-top: 1.3rem; font-size: 0.88rem; color: #8a7060; }
+    .register-link a { color: #b45f2b; font-weight: 600; text-decoration: none; }
+    .register-link a:hover { text-decoration: underline; }
+
+    /* ===== PAGE BODY ===== */
+    .bread-wrapper {
+      max-width: 1280px;
+      margin: 2rem auto;
+      background: #ffffff;
+      border-radius: 0 0 1.5rem 1.5rem;
+      box-shadow: 0 25px 50px -12px rgba(90,60,30,0.2);
+      overflow: hidden;
+    }
+
+    .contact-title-block { padding: 1.8rem 2.5rem 0.8rem; }
+    .contact-title-block h1 { font-size: 2.8rem; font-weight: 700; color: #2e2a24; letter-spacing: -0.01em; }
+    .contact-title-block p { color: #6f5e4e; max-width: 500px; margin-top: 0.5rem; font-size: 1rem; }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      padding: 1rem 2.5rem 2.8rem;
+    }
+
+    /* Left col */
+    .left-col { background: #fefaf6; border-radius: 2rem; padding: 2rem; border: 1px solid #eddccb; }
+    .get-title { font-size: 1.6rem; font-weight: 700; color: #3f3126; margin-bottom: 1.8rem; display: flex; align-items: center; gap: 8px; }
+    .get-title i { color: #b45f2b; font-size: 1.8rem; }
+
+    .contact-card { background: white; border-radius: 1.5rem; padding: 1.5rem 1.8rem; margin-bottom: 1.2rem; box-shadow: 0 6px 14px #ede0d3; border: 1px solid #f5e4d3; }
+    .contact-row { display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1.5rem; }
+    .contact-row > i { font-size: 1.5rem; color: #b45f2b; background: #fef0e0; padding: 0.8rem; border-radius: 50%; width: 3.2rem; text-align: center; }
+    .contact-row h4 { font-weight: 700; color: #2f281f; margin-bottom: 0.15rem; }
+    .contact-row p { color: #5f5347; font-size: 0.95rem; }
+
+    .phone-numbers .phone-item { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 0.6rem; }
+    .phone-numbers .phone-item i { font-size: 1rem; background: #f5e2d1; padding: 0.35rem 0.5rem; border-radius: 50%; color: #b45f2b; }
+
+    .shop-info { background: #f9f0e7; border-radius: 1.5rem; padding: 1.5rem 1.8rem; margin-top: 1.8rem; border: 1px solid #e2cfbb; }
+    .shop-info p { margin: 0.5rem 0; color: #3f352b; display: flex; align-items: center; gap: 0.8rem; }
+    .shop-info i { color: #b45f2b; width: 1.5rem; font-size: 1.1rem; }
+
+    .rating-compact { display: flex; align-items: center; gap: 6px; background: #faeede; border-radius: 40px; padding: 0.3rem 1rem 0.3rem 0.8rem; width: fit-content; margin-top: 1.5rem; }
+    .rating-stars { color: #f8b84a; letter-spacing: 2px; }
+    .rating-text { font-weight: 600; color: #5f4a36; }
+    .download-link { margin-top: 2rem; font-size: 0.9rem; color: #6f4f32; text-decoration: underline dotted; cursor: default; }
+
+    /* Right col */
+    .right-col { background: #fdf9f5; border-radius: 2rem; padding: 2rem; border: 1px solid #edd2bc; }
+    .form-row { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.3rem; }
+    .form-group { flex: 1 1 calc(50% - 0.5rem); min-width: 180px; }
+    .form-group label { font-weight: 600; color: #4d3f32; display: block; margin-bottom: 0.3rem; font-size: 0.9rem; }
+    .form-group input, .form-group textarea {
+      width: 100%; padding: 0.9rem 1.2rem;
+      border: 1px solid #e2cfbb; border-radius: 2rem;
+      background: white; font-size: 0.95rem; outline: none; font-family: inherit;
+    }
+    .form-group input:focus, .form-group textarea:focus { border-color: #b45f2b; box-shadow: 0 0 0 3px #f0d9c4; }
+    .form-group textarea { border-radius: 1.8rem; resize: vertical; }
+    .full-row { flex: 1 1 100%; }
+
+    .our-store-box { background: #f9efe6; border-radius: 1.8rem; padding: 1.8rem; margin: 1.8rem 0 1.2rem; border: 1px solid #dfc9b4; }
+    .store-row { display: flex; gap: 0.8rem; margin-bottom: 0.8rem; align-items: center; }
+    .store-row i { color: #b45f2b; width: 1.6rem; }
+
+    .further-links { display: flex; flex-wrap: wrap; gap: 2.5rem; margin-top: 2rem; }
+    .link-col p { font-weight: 700; color: #422f20; margin-bottom: 0.8rem; }
+    .link-col ul { list-style: none; }
+    .link-col li { margin-bottom: 0.4rem; color: #6e5b4b; font-size: 0.9rem; }
+    .link-col li i { margin-right: 0.4rem; color: #b45f2b; font-size: 0.8rem; }
+
+    /* Footer */
+    footer { background: #e79b38; color: #000000; padding: 50px 20px; }
+    .footer-container { max-width: 1200px; margin: auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 30px; }
+    .footer-col h3 { color: #000000; margin-bottom: 15px; font-size: 18px; position: relative; }
+    .footer-col h3::after { content: ''; width: 50px; height: 2px; background: #000000; position: absolute; left: 0; bottom: -5px; }
+    .footer-col p { line-height: 1.6; font-size: 14px; }
+    .footer-col ul { list-style: none; }
+    .footer-col ul li { margin: 10px 0; }
+    .footer-col ul li a { text-decoration: none; color: #000000; font-size: 14px; transition: 0.3s; }
+    .footer-col ul li a:hover { color: #ffffff; padding-left: 5px; }
+    .social-links a {
+      display: inline-block; width: 35px; height: 35px; line-height: 35px;
+      text-align: center; margin: 0 8px 0 0; border-radius: 50%;
+      background: #000000; color: #fff; transition: 0.3s;
+    }
+    .social-links a:hover { background: #ffffff; box-shadow: 0px 0px 2px rgb(189,153,8); color: #ca862c; }
+    .newsletter input { padding: 10px; width: 70%; border: none; outline: none; border-radius: 25px 25px; margin-top: 10px; }
+    .newsletter button {
+      padding: 10px 20px; border: none; background: #080808; color: #fff;
+      border-radius: 0 25px 25px; cursor: pointer; margin: 10px; transition: 0.3s;
+    }
+    .newsletter button:hover { background: #ffffff; color: #c77e23; box-shadow: 0px 0px 2px rgb(223,143,4); }
+    .footer-bottom { text-align: center; margin-top: 40px; border-top: 1px solid #333; padding-top: 20px; font-size: 14px; color: #000000; }
+
+
+    /* Toast */
+    .toast-message {
+      position: fixed;
+      bottom: 25px; left: 25px;
+      background: #3a1f0d;
+      color: white;
+      padding: 0.8rem 2rem;
+      border-radius: 60px;
+      font-weight: 500;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      opacity: 0;
+      transition: opacity 0.2s;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    @media (max-width: 768px) {
+      .header-content { flex-direction: column; align-items: flex-start; }
+      .search-wrapper { flex: 1 1 100%; }
+      .nav { display: none; }
+      .contact-grid { grid-template-columns: 1fr; }
+      .contact-title-block { padding: 1.5rem 1.2rem 0.6rem; }
+      .contact-grid { padding: 1rem 1.2rem 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Toast -->
+<div class="toast-message" id="toastMsg"></div>
+
+<!-- LOGIN MODAL -->
+<div class="modal-overlay" id="loginModal">
+  <div class="login-modal">
+    <button class="modal-close" id="closeModal"><i class="fas fa-times"></i></button>
+    <div class="modal-logo">Kusumira</div>
+    <h3>Welcome back 👋</h3>
+    <p class="subtitle">Sign in to your account to continue</p>
+
+    <div class="modal-field">
+      <label><i class="fas fa-envelope" style="color:#b45f2b; margin-right:5px;"></i>Email Address</label>
+      <input type="email" id="emailInput" placeholder="you@example.com">
+    </div>
+    <div class="modal-field">
+      <label><i class="fas fa-lock" style="color:#b45f2b; margin-right:5px;"></i>Password</label>
+      <input type="password" id="passwordInput" placeholder="••••••••">
+    </div>
+    <div class="modal-footer-link"><a href="#">Forgot password?</a></div>
+    <button class="login-submit" id="loginSubmit"><i class="fas fa-sign-in-alt"></i> Sign In</button>
+
+    <div class="modal-divider">or continue with</div>
+    <div class="social-login">
+      <button><i class="fab fa-google" style="color:#e34234;"></i> Google</button>
+      <button><i class="fab fa-facebook-f" style="color:#1877f2;"></i> Facebook</button>
+    </div>
+    <div class="register-link">Don't have an account? <a href="#">Create one free</a></div>
+  </div>
+</div>
+
+<!-- Shared nav injected by nav-component.js -->
+
+<!-- MAIN CONTENT CARD -->
+<div class="bread-wrapper">
+
+  <div class="contact-title-block">
+    <h1>ContactUs</h1>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut elit tellus, luctus nec ullamcorper mattis, pulvinar dapibus leo.</p>
+  </div>
+
+  <div class="contact-grid">
+    <!-- LEFT -->
+    <div class="left-col">
+      <div class="get-title"><i class="fas fa-handshake"></i> Get In Touch</div>
+
+      <div class="contact-card">
+        <div class="contact-row">
+          <i class="fas fa-phone-alt"></i>
+          <div>
+            <h4>Phone</h4>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br>Ut elit tellus, luctus nec ullamcorper mattis.</p>
+          </div>
+        </div>
+        <div class="phone-numbers">
+          <div class="phone-item"><i class="fas fa-phone"></i> 207-8767-452</div>
+          <div class="phone-item"><i class="fab fa-whatsapp"></i> 082-123-234-345</div>
+        </div>
+      </div>
+
+      <div class="shop-info">
+        <p><i class="fas fa-user"></i> Name</p>
+        <p><i class="fas fa-envelope"></i> Email</p>
+        <p><i class="fas fa-envelope-open"></i> <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="3f4c4a4f4f504d4b7f46504a4d4c564b5a115c5052">[email&#160;protected]</a></p>
+        <p><i class="fas fa-map-pin"></i> 2443 Oak Ridge Omaha, QA45065</p>
+        <p><i class="fas fa-comment"></i> Subject</p>
+        <p><i class="fas fa-comment-dots"></i> Message</p>
+      </div>
+
+      <div class="rating-compact" style="margin-top:1.5rem;">
+        <span style="font-weight:700;">4.5</span>
+        <span class="rating-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i></span>
+        <span class="rating-text">150/17 reviews</span>
+      </div>
+
+      <div class="download-link">www.DownloadNewThemes.com</div>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="right-col">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Name</label>
+          <input type="text" placeholder="Your name">
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" placeholder="Email">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group full-row">
+          <label>Subject</label>
+          <input type="text" placeholder="Subject">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group full-row">
+          <label>Message</label>
+          <textarea rows="3" placeholder="Your message"></textarea>
+        </div>
+      </div>
+
+      <div class="our-store-box">
+        <h3 style="color:#3e2d1d; margin-bottom:1rem; font-weight:700;">Our Store</h3>
+        <div class="store-row"><i class="fas fa-map-marker-alt"></i> 2443 Oak Ridge Omaha, QA45065</div>
+        <div class="store-row"><i class="fas fa-phone"></i> 207-8767-452</div>
+        <div class="store-row"><i class="fas fa-envelope"></i> <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="d7a4a2a7a7b8a5a397a4bea3b2f9b4b8ba">[email&#160;protected]</a></div>
+      </div>
+
+      <div class="further-links">
+        <div class="link-col">
+          <p>Further Links</p>
+          <ul>
+            <li><i class="fas fa-chevron-right"></i> Home</li>
+            <li><i class="fas fa-chevron-right"></i> Term & Condition</li>
+            <li><i class="fas fa-chevron-right"></i> About</li>
+            <li><i class="fas fa-chevron-right"></i> News</li>
+            <li><i class="fas fa-chevron-right"></i> Contact</li>
+            <li><i class="fas fa-chevron-right"></i> Learning</li>
+          </ul>
+        </div>
+        <div class="link-col">
+          <p>Get In Touch</p>
+          <ul>
+            <li><i class="fas fa-map-pin"></i> 2443 Oak Ridge Omaha, QA</li>
+            <li><i class="fas fa-phone"></i> 207-8767-452</li>
+            <li><i class="fas fa-envelope"></i> <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="cdbeb8bdbda2bfb98dbea4b9a8e3aea2a0">[email&#160;protected]</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+ <footer>
+  <div class="footer-container">
+    <div class="footer-col">
+      <h3>Kusumira</h3>
+      <p style="margin-bottom: 1.2rem;">Rooted in Indian craftsmanship, we create heirloom-quality crochet with contemporary soul. Every purchase empowers women artisans.</p>
+      <div class="social-links">
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-facebook-f"></i></a>
+        <a href="#"><i class="fab fa-pinterest"></i></a>
+        <a href="#"><i class="fab fa-youtube"></i></a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h3>Explore</h3>
+      <ul>
+        <li><a href="#">Shop all</a></li>
+        <li><a href="#">New arrivals</a></li>
+        <li><a href="#">Gift sets</a></li>
+        <li><a href="#">Custom order</a></li>
+        <li><a href="#">Artisan stories</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h3>Support</h3>
+      <ul>
+        <li><a href="#">Contact</a></li>
+        <li><a href="#">Shipping</a></li>
+        <li><a href="#">Returns</a></li>
+        <li><a href="#">Care guide</a></li>
+        <li><a href="#">Privacy</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h3>Newsletter</h3>
+      <p style="margin-bottom: 0.5rem;">Be the first to know limited drops.</p>
+      <div class="newsletter">
+        <input type="email" placeholder="Your email">
+        <button>Join</button>
+      </div>
+      <p style="margin-top: 1.5rem; font-size: 0.8rem;">✉️ <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="d9b1bcb5b5b699b2acaaacb4b0abb8f7bab6b4">[email&#160;protected]</a></p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    © 2025 Kusumira — handcrafted with 💛 in India
+  </div>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  const toast = document.getElementById('toastMsg');
+  function showMsg(text) {
+    toast.textContent = text;
+    toast.style.opacity = '1';
+    setTimeout(() => { toast.style.opacity = '0'; }, 2200);
+  }
+
+  // Cart
+  document.getElementById('cartBtn').addEventListener('click', () => showMsg('🧺 View cart (demo)'));
+
+  // Login modal
+  const loginBtn    = document.getElementById('loginBtn');
+  const loginModal  = document.getElementById('loginModal');
+  const closeModal  = document.getElementById('closeModal');
+
+  loginBtn.addEventListener('click', () => loginModal.classList.add('active'));
+  closeModal.addEventListener('click', () => loginModal.classList.remove('active'));
+  loginModal.addEventListener('click', (e) => { if (e.target === loginModal) loginModal.classList.remove('active'); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') loginModal.classList.remove('active'); });
+
+  document.getElementById('loginSubmit').addEventListener('click', () => {
+    const email = document.getElementById('emailInput').value.trim();
+    if (!email) { showMsg('⚠️ Please enter your email'); return; }
+    loginModal.classList.remove('active');
+    loginBtn.innerHTML = '<i class="fas fa-user-check"></i> Hi, User';
+    showMsg('✅ Logged in successfully!');
+  });
+
+  // Search
+  const searchInput   = document.getElementById('searchInput');
+  const suggestions   = document.getElementById('searchSuggestions');
+  const searchBtn     = document.getElementById('searchBtn');
+
+  searchInput.addEventListener('focus', () => suggestions.classList.add('show'));
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.search-wrapper')) suggestions.classList.remove('show');
+  });
+  document.querySelectorAll('.suggestion-item').forEach(item => {
+    item.addEventListener('click', () => {
+      searchInput.value = item.textContent.trim();
+      suggestions.classList.remove('show');
+      showMsg('🔍 Searching…');
+    });
+  });
+  searchBtn.addEventListener('click', () => {
+    if (searchInput.value.trim()) showMsg('🔍 Searching for "' + searchInput.value.trim() + '"…');
+    suggestions.classList.remove('show');
+  });
+</script>
+<script>window.KU_ACTIVE_PAGE = 'contact';</script>
+<script src="nav-component.js"></script>
+</body>
+</html>

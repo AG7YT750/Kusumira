@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kusumira · Checkout</title>
+
+  <style>
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    body{
+      font-family:'Segoe UI', Arial, sans-serif;
+      background:#f7f7f7;
+      padding:20px;
+    }
+
+    h1{
+      text-align:center;
+      color:#e79b38;
+      margin-bottom:25px;
+    }
+
+    .checkout-container{
+      max-width:1000px;
+      margin:auto;
+      display:grid;
+      grid-template-columns:1fr 350px;
+      gap:25px;
+    }
+
+    .form-box,
+    .summary-box{
+      background:white;
+      padding:25px;
+      border-radius:15px;
+      box-shadow:0 2px 10px rgba(0,0,0,0.08);
+    }
+
+    .form-box h2,
+    .summary-box h2{
+      margin-bottom:20px;
+      color:#333;
+    }
+
+    .input-group{
+      margin-bottom:18px;
+    }
+
+    .input-group label{
+      display:block;
+      margin-bottom:6px;
+      font-weight:600;
+      color:#444;
+    }
+
+    .input-group input,
+    .input-group textarea,
+    .input-group select{
+      width:100%;
+      padding:12px;
+      border:1px solid #ddd;
+      border-radius:8px;
+      font-size:15px;
+      outline:none;
+    }
+
+    .input-group textarea{
+      resize:vertical;
+      min-height:90px;
+    }
+
+    .row{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:15px;
+    }
+
+    .payment-methods{
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      margin-top:10px;
+    }
+
+    .payment-option{
+      border:1px solid #ddd;
+      padding:12px;
+      border-radius:10px;
+      cursor:pointer;
+    }
+
+    .payment-option input{
+      margin-right:10px;
+    }
+
+    .summary-item{
+      display:flex;
+      justify-content:space-between;
+      margin-bottom:12px;
+      color:#444;
+    }
+
+    .summary-total{
+      border-top:1px solid #eee;
+      padding-top:15px;
+      margin-top:15px;
+      font-size:22px;
+      font-weight:bold;
+      display:flex;
+      justify-content:space-between;
+    }
+
+    .place-order-btn{
+      width:100%;
+      padding:15px;
+      background:#ca762c;
+      color:white;
+      border:none;
+      border-radius:10px;
+      font-size:17px;
+      font-weight:bold;
+      cursor:pointer;
+      margin-top:20px;
+      transition:0.2s;
+    }
+
+    .place-order-btn:hover{
+      background:#b8651f;
+    }
+
+    .cart-item{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      margin-bottom:15px;
+      padding-bottom:15px;
+      border-bottom:1px solid #eee;
+    }
+
+    .cart-item img{
+      width:60px;
+      height:60px;
+      object-fit:cover;
+      border-radius:8px;
+    }
+
+    .cart-item-info{
+      flex:1;
+    }
+
+    .cart-item-info h4{
+      font-size:15px;
+      color:#333;
+      margin-bottom:4px;
+    }
+
+    .cart-item-info p{
+      color:#777;
+      font-size:14px;
+    }
+
+    .empty-cart{
+      text-align:center;
+      color:#666;
+      padding:30px 0;
+    }
+
+    @media(max-width:850px){
+
+      .checkout-container{
+        grid-template-columns:1fr;
+      }
+
+      .row{
+        grid-template-columns:1fr;
+      }
+
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <h1>💳 Checkout</h1>
+
+  <div class="checkout-container">
+
+    <!-- LEFT SIDE -->
+    <div class="form-box">
+
+      <h2>Shipping Details</h2>
+
+      <form id="checkoutForm">
+
+        <div class="row">
+
+          <div class="input-group">
+            <label>First Name</label>
+            <input type="text" required>
+          </div>
+
+          <div class="input-group">
+            <label>Last Name</label>
+            <input type="text" required>
+          </div>
+
+        </div>
+
+        <div class="input-group">
+          <label>Email Address</label>
+          <input type="email" required>
+        </div>
+
+        <div class="input-group">
+          <label>Phone Number</label>
+          <input type="tel" required>
+        </div>
+
+        <div class="input-group">
+          <label>Shipping Address</label>
+          <textarea required></textarea>
+        </div>
+
+        <div class="row">
+
+          <div class="input-group">
+            <label>City</label>
+            <input type="text" required>
+          </div>
+
+          <div class="input-group">
+            <label>Pincode</label>
+            <input type="text" required>
+          </div>
+
+        </div>
+
+        <div class="input-group">
+          <label>Payment Method</label>
+
+          <div class="payment-methods">
+
+            <label class="payment-option">
+              <input type="radio" name="payment" value="COD" checked>
+              Cash on Delivery
+            </label>
+
+            <label class="payment-option">
+              <input type="radio" name="payment" value="UPI">
+              UPI Payment
+            </label>
+
+            <label class="payment-option">
+              <input type="radio" name="payment" value="CARD">
+              Credit / Debit Card
+            </label>
+
+          </div>
+
+        </div>
+
+        <button type="submit" class="place-order-btn">
+          Place Order
+        </button>
+
+      </form>
+
+    </div>
+
+    <!-- RIGHT SIDE -->
+    <div class="summary-box">
+
+      <h2>Order Summary</h2>
+
+      <div id="cartItems"></div>
+
+      <div class="summary-item">
+        <span>Subtotal</span>
+        <span>₹<span id="subtotal">0</span></span>
+      </div>
+
+      <div class="summary-item">
+        <span>Shipping</span>
+        <span>₹50</span>
+      </div>
+
+      <div class="summary-total">
+        <span>Total</span>
+        <span>₹<span id="finalTotal">0</span></span>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+
+    let cart = JSON.parse(localStorage.getItem("ku_cart")) || [];
+
+    const cartItemsContainer = document.getElementById("cartItems");
+
+    let subtotal = 0;
+
+    // Empty cart
+    if(cart.length === 0){
+
+      cartItemsContainer.innerHTML = `
+        <div class="empty-cart">
+          Your cart is empty 😢
+        </div>
+      `;
+
+    }else{
+
+      cart.forEach(item => {
+
+        const qty = item.qty || 1;
+        const price = item.price || 0;
+
+        subtotal += qty * price;
+
+        cartItemsContainer.innerHTML += `
+
+          <div class="cart-item">
+
+            <img 
+              src="${item.image}" 
+              onerror="this.src='https://via.placeholder.com/60'"
+            >
+
+            <div class="cart-item-info">
+              <h4>${item.name}</h4>
+              <p>₹${price} × ${qty}</p>
+            </div>
+
+          </div>
+
+        `;
+      });
+
+    }
+
+    document.getElementById("subtotal").innerText = subtotal;
+
+    let finalAmount = subtotal + 50;
+
+    if(cart.length === 0){
+      finalAmount = 0;
+    }
+
+    document.getElementById("finalTotal").innerText = finalAmount;
+
+    // FORM SUBMIT
+    document.getElementById("checkoutForm")
+    .addEventListener("submit", function(e){
+
+      e.preventDefault();
+
+      if(cart.length === 0){
+        alert("Your cart is empty!");
+        return;
+      }
+
+      const paymentMethod = 
+      document.querySelector('input[name="payment"]:checked').value;
+
+      alert(
+        "Order placed successfully!\n\nPayment Method: " 
+        + paymentMethod
+      );
+
+      // Clear cart after order
+      localStorage.removeItem("ku_cart");
+
+      // Redirect
+      window.location.href = "index.html";
+
+    });
+
+  </script>
+
+</body>
+</html>

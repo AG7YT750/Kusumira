@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kusumira - Crochet Store</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Edu+VIC+WA+NT+Hand&family=Noto+Serif+Oriya:wght@400..700&family=Playwrite+CA:wght@100..400&family=Satisfy&display=swap" rel="stylesheet">
+
+  <style>
+    /* ============================================================
+       LOGIN MODAL OVERLAY
+       ============================================================ */
+    .login-modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 10, 5, 0.72);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      z-index: 9999;
+      align-items: center;
+      justify-content: center;
+      animation: fadeOverlay 0.3s ease;
+    }
+    .login-modal-overlay.active {
+      display: flex;
+    }
+    @keyframes fadeOverlay {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    /* Modal card */
+    .login-modal-card {
+      background: rgba(255, 255, 255, 0.97);
+      border-radius: 28px;
+      box-shadow: 0 30px 70px -10px rgba(0,0,0,0.45), 0 0 0 1px rgba(231,155,56,0.15);
+      width: 100%;
+      max-width: 440px;
+      padding: 2.8rem 2.5rem 2.2rem;
+      position: relative;
+      animation: slideUp 0.35s cubic-bezier(0.22,1,0.36,1);
+      margin: 1rem;
+    }
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(32px) scale(0.96); }
+      to   { opacity: 1; transform: translateY(0)   scale(1); }
+    }
+
+    /* Close button */
+    .modal-close-btn {
+      position: absolute;
+      top: 1.1rem; right: 1.1rem;
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      border: none;
+      background: #f5efe8;
+      color: #555;
+      font-size: 1rem;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s, color 0.2s, transform 0.15s;
+      box-shadow: none;
+      padding: 0;
+      width: 36px;
+    }
+    .modal-close-btn:hover {
+      background: #e79b38;
+      color: white;
+      transform: rotate(90deg);
+    }
+
+    /* Modal logo */
+    .modal-logo {
+      font-family: 'Satisfy', cursive;
+      font-size: 1.7rem;
+      color: #ca862c;
+      margin-bottom: 0.2rem;
+      text-align: center;
+    }
+    .modal-tagline {
+      text-align: center;
+      color: #999;
+      font-size: 0.88rem;
+      margin-bottom: 1.6rem;
+    }
+
+    .modal-title {
+      font-size: 1.55rem;
+      font-weight: 700;
+      color: #1a1a1a;
+      text-align: center;
+      margin-bottom: 0.2rem;
+    }
+
+    /* Form fields */
+    .modal-field {
+      position: relative;
+      margin-bottom: 1rem;
+    }
+    .modal-field i {
+      position: absolute;
+      left: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #ccc;
+      font-size: 0.95rem;
+      transition: color 0.2s;
+    }
+    .modal-field input {
+      width: 100%;
+      padding: 0.85rem 1rem 0.85rem 2.6rem;
+      border: 1.5px solid #e5d9cc;
+      border-radius: 50px;
+      font-size: 0.95rem;
+      outline: none;
+      background: #fafafa;
+      color: #222;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      margin-bottom: 0;
+      box-sizing: border-box;
+    }
+    .modal-field input:focus {
+      border-color: #e79b38;
+      box-shadow: 0 0 0 3px rgba(231,155,56,0.12);
+      background: #fff;
+    }
+    .modal-field input:focus + i,
+    .modal-field:focus-within i {
+      color: #e79b38;
+    }
+    /* fix icon ordering — icon after input in DOM but positioned absolutely */
+    .modal-field {
+      display: flex;
+      flex-direction: column;
+    }
+    .modal-field input { order: 1; }
+    .modal-field i     { order: 2; /* but absolute so fine */ }
+
+    .remember-forgot {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+      color: #666;
+      margin-bottom: 1.2rem;
+      padding: 0 0.3rem;
+    }
+    .remember-forgot label { display: flex; align-items: center; gap: 6px; cursor: pointer; }
+    .remember-forgot input[type="checkbox"] { accent-color: #e79b38; width: auto; margin: 0; padding: 0; border: none; border-radius: 0; box-shadow: none; }
+    .remember-forgot a { color: #e79b38; text-decoration: none; font-weight: 500; }
+    .remember-forgot a:hover { text-decoration: underline; }
+
+    /* Submit button */
+    .modal-submit-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #e79b38, #ca762c);
+      border: none;
+      border-radius: 50px;
+      padding: 0.95rem;
+      color: white;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.2s;
+      box-shadow: 0 8px 20px -6px rgba(202,118,44,0.55);
+      letter-spacing: 0.3px;
+    }
+    .modal-submit-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 24px -6px rgba(202,118,44,0.65);
+    }
+
+    /* Divider */
+    .modal-divider {
+      display: flex; align-items: center; gap: 0.8rem;
+      margin: 1.2rem 0;
+      color: #bbb; font-size: 0.83rem;
+    }
+    .modal-divider::before, .modal-divider::after {
+      content: ''; flex: 1; height: 1px; background: #ede5d8;
+    }
+
+    /* Social buttons */
+    .modal-social { display: flex; gap: 10px; }
+    .modal-social-btn {
+      flex: 1;
+      display: flex; align-items: center; justify-content: center; gap: 7px;
+      padding: 0.75rem;
+      border: 1.5px solid #e8ddd0;
+      border-radius: 50px;
+      background: white;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: #333;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s;
+      width: auto;
+      box-shadow: none;
+    }
+    .modal-social-btn:hover {
+      background: #fff8f0;
+      border-color: #e79b38;
+    }
+
+    /* Signup link */
+    .modal-signup {
+      text-align: center;
+      font-size: 0.88rem;
+      color: #888;
+      margin-top: 1.2rem;
+    }
+    .modal-signup a {
+      color: #e79b38;
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .modal-signup a:hover { text-decoration: underline; }
+
+    /* Scroll trigger countdown ring */
+    .scroll-trigger-notice {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      z-index: 8888;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+    .scroll-trigger-notice.visible { display: flex; }
+    .countdown-ring {
+      width: 52px; height: 52px;
+      position: relative;
+    }
+    .countdown-ring svg {
+      transform: rotate(-90deg);
+    }
+    .countdown-ring circle.track {
+      fill: none;
+      stroke: rgba(231,155,56,0.2);
+      stroke-width: 4;
+    }
+    .countdown-ring circle.progress {
+      fill: none;
+      stroke: #e79b38;
+      stroke-width: 4;
+      stroke-linecap: round;
+      stroke-dasharray: 138.2; /* 2π×22 */
+      stroke-dashoffset: 0;
+      transition: stroke-dashoffset 1s linear;
+    }
+    .countdown-number {
+      position: absolute;
+      inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: #e79b38;
+    }
+    .countdown-label {
+      font-size: 0.68rem;
+      color: #888;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+    }
+
+    /* ── Header login button ── */
+    .login-header-btn {
+      background: transparent;
+      border: 1.5px solid rgba(255,255,255,0.5);
+      color: white;
+      border-radius: 50px;
+      padding: 0.45rem 1.1rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      transition: background 0.2s, border-color 0.2s;
+      margin-left: 10px;
+    }
+    .login-header-btn:hover {
+      background: rgba(255,255,255,0.12);
+      border-color: #e79b38;
+      color: #e79b38;
+    }
+
+    /* Toast */
+    .ku-toast {
+      position: fixed;
+      bottom: 28px; left: 28px;
+      background: #1a1a1a;
+      color: white;
+      padding: 0.75rem 1.8rem;
+      border-radius: 50px;
+      font-size: 0.92rem;
+      font-weight: 500;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.25s, transform 0.25s;
+      pointer-events: none;
+      z-index: 99999;
+    }
+    .ku-toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============================================================
+       LOGIN MODAL
+       ============================================================ -->
+  <div class="login-modal-overlay" id="loginModalOverlay" role="dialog" aria-modal="true" aria-label="Sign in">
+    <div class="login-modal-card" id="loginModalCard">
+      <button class="modal-close-btn" id="modalCloseBtn" aria-label="Close">
+        <i class="fas fa-times"></i>
+      </button>
+
+      <div class="modal-logo">Kusumira</div>
+      <p class="modal-tagline">Handmade with love, crafted with thread 🧶</p>
+      <h2 class="modal-title">Welcome back 👋</h2>
+
+      <form id="modalLoginForm" novalidate>
+        <div class="modal-field">
+          <input type="email" id="modalEmail" placeholder="Email address" required autocomplete="email">
+          <i class="fas fa-envelope"></i>
+        </div>
+        <div class="modal-field">
+          <input type="password" id="modalPassword" placeholder="Password" required autocomplete="current-password">
+          <i class="fas fa-lock"></i>
+        </div>
+
+        <div class="remember-forgot">
+          <label><input type="checkbox" id="rememberMe"> Remember me</label>
+          <a href="#">Forgot Password?</a>
+        </div>
+
+        <button type="submit" class="modal-submit-btn">
+          <i class="fas fa-sign-in-alt" style="margin-right:6px;"></i> Sign In
+        </button>
+      </form>
+
+      <div class="modal-divider">or continue with</div>
+
+      <div class="modal-social">
+        <button class="modal-social-btn" onclick="googleLogin()">
+          <i class="fab fa-google" style="color:#e34234;"></i> Google
+        </button>
+        <button class="modal-social-btn" onclick="appleLogin()">
+          <i class="fab fa-apple" style="color:#000;"></i> Apple ID
+        </button>
+      </div>
+
+      <div class="modal-signup">
+        Don't have an account? <a href="/signup.html">Sign Up Now</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scroll-triggered countdown ring -->
+  <div class="scroll-trigger-notice" id="scrollNotice">
+    <div class="countdown-ring">
+      <svg width="52" height="52" viewBox="0 0 52 52">
+        <circle class="track"    cx="26" cy="26" r="22"/>
+        <circle class="progress" cx="26" cy="26" r="22" id="countdownCircle"/>
+      </svg>
+      <div class="countdown-number" id="countdownNumber">10</div>
+    </div>
+    <div class="countdown-label">Sign in soon</div>
+  </div>
+
+  <!-- Toast -->
+  <div class="ku-toast" id="kuToast"></div>
+
+  <!-- Shared nav injected by nav-component.js -->
+
+  <section id="home" class="hero">
+    <div class="hero-overlay">
+      <h1>Discover the Magic of Exclusive Crochet Designs</h1>
+      <p>Handmade with love, delivered to your door.</p>
+      <a href="shop.html" class="primary-btn">Shop Now</a>
+      <button onclick="window.location.href='/mainpage.html'" style="
+        margin-top:1rem; background:transparent;
+        border:2px solid rgba(255,255,255,0.7); color:white;
+        padding:0.7rem 2rem; border-radius:50px; cursor:pointer;
+        font-size:1rem; font-weight:600;
+        transition:background 0.2s, border-color 0.2s;
+        display:inline-flex; align-items:center; gap:8px;
+      " onmouseover="this.style.background='rgba(255,255,255,0.15)'"
+         onmouseout="this.style.background='transparent'">
+        <i class="fas fa-user-plus"></i> Join Kusumira
+      </button>
+    </div>
+  </section>
+
+ <button id="kuCartBtn">
+   <i class="fas fa-shopping-cart"></i>
+</button>
+
+  <!-- ============================================================
+       FEATURES
+       ============================================================ -->
+  <section class="features-container container">
+    <div class="feature">
+      <i class="fas fa-lock"></i>
+      <h3>Secure Payment</h3>
+      <p>Safe and encrypted transactions</p>
+    </div>
+    <div class="feature">
+      <i class="fas fa-shipping-fast"></i>
+      <h3>Free Shipping</h3>
+      <p>On orders above ₹500</p>
+    </div>
+    <div class="feature">
+      <i class="fas fa-box"></i>
+      <h3>Careful Delivery</h3>
+      <p>Packed with care</p>
+    </div>
+    <div class="feature">
+      <i class="fas fa-headset"></i>
+      <h3>24/7 Support</h3>
+      <p>Always here to help</p>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       CATEGORIES
+       ============================================================ -->
+  <section id="categories" class="categories container">
+    <h2>Our Categories</h2>
+    <div class="category-grid">
+      <div class="category-card">
+        <img src="image5.jpg" alt="Crochet Pot">
+        <h4>Crochet Pot</h4>
+      </div>
+      <div class="category-card">
+        <img src="image6.jpg" alt="Home Decor">
+        <h4>Crochet Pot</h4>
+      </div>
+      <div class="category-card">
+        <img src="image7.jpg" alt="Accessories">
+        <h4>Crochet Pot</h4>
+      </div>
+      <div class="category-card">
+        <img src="image7.jpg" alt="Accessories">
+        <h4>Crochet Pot</h4>
+      </div>
+      <div class="category-card">
+        <img src="image7.jpg" alt="Accessories">
+        <h4>Crochet Pot</h4>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       PRODUCTS
+       ============================================================ -->
+  <section id="shop" class="products-container">
+    <h2>Trending Products</h2>
+    <div class="product-grid">
+      <div class="product-card">
+        <img src="image2.jpg" alt="Crochet Bouquet">
+        <h4>Crochet Bouquet</h4>
+        <p class="price">₹450</p>
+        <button class="btn">Add to Cart</button>
+      </div>
+      <div class="product-card">
+        <img src="image3.jpg" alt="Crochet Pot">
+        <h4>Crochet Pot</h4>
+        <p class="price">₹279</p>
+        <button class="btn">Add to Cart</button>
+      </div>
+      <div class="product-card">
+        <img src="image4.jpg" alt="Crochet Keychain">
+        <h4>Crochet Keychain</h4>
+        <p class="price">₹129</p>
+        <button class="btn">Add to Cart</button>
+      </div>
+      <div class="product-card">
+        <img src="image4.jpg" alt="Crochet Keychain">
+        <h4>Crochet Keychain</h4>
+        <p class="price">₹129</p>
+        <button class="btn">Add to Cart</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       TESTIMONIALS
+       ============================================================ -->
+  <section class="testimonials container">
+    <h2>What Our Customers Say</h2>
+    <blockquote>"I am absolutely thrilled with the quality and detail of my crochet blanket. Highly recommend!" — Sarah M.</blockquote>
+    <blockquote>"Beautiful designs and fantastic service. My order arrived earlier than expected." — John D.</blockquote>
+  </section>
+
+  <!-- ============================================================
+       FOOTER
+       ============================================================ -->
+  <footer>
+    <div class="footer-container">
+      <div class="footer-col">
+        <h3>About Us</h3>
+        <p>Your one-stop destination for the finest handcrafted crochet. We deliver quality and trust right at your doorstep.</p>
+      </div>
+      <div class="footer-col">
+        <h3>Quick Links</h3>
+        <ul>
+          <li><a href="#">Shop</a></li>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Contact</a></li>
+          <li><a href="#">FAQs</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3>Customer Service</h3>
+        <ul>
+          <li><a href="#">Shipping & Returns</a></li>
+          <li><a href="#">Track Order</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms & Conditions</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h3>Newsletter</h3>
+        <p>Subscribe to stay updated on the latest drops and deals.</p>
+        <div class="newsletter">
+          <input type="email" placeholder="Enter your email">
+          <button>Subscribe</button>
+        </div>
+        <div class="social-links" style="margin-top:20px;">
+          <a href="#"><i class="fa-brands fa-instagram"></i></a>
+          <a href="#"><i class="fa-brands fa-facebook"></i></a>
+          <a href="#"><i class="fa-brands fa-twitter"></i></a>
+          <a href="#"><i class="fa-brands fa-linkedin"></i></a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      &copy; 2025 Kusumira. All Rights Reserved.
+    </div>
+  </footer>
+
+  <!-- ============================================================
+       JAVASCRIPT
+       ============================================================ -->
+  <script>window.KU_ACTIVE_PAGE = 'home';</script>
+  <script src="nav-component.js"></script>
+  <script>
+    /* ── State ─────────────────────────────────────────────── */
+    let isLoggedIn        = false;
+    let scrollTriggered   = false;  // only fire scroll trigger once
+    let hasScrolled       = false;  // did user scroll at all?
+    let scrollCountdownId = null;
+    let secondsLeft       = 10;
+    const CIRCUMFERENCE   = 2 * Math.PI * 22; // 138.23
+
+    /* ── DOM refs ──────────────────────────────────────────── */
+    const overlay        = document.getElementById('loginModalOverlay');
+    const card           = document.getElementById('loginModalCard');
+    const closeBtn       = document.getElementById('modalCloseBtn');
+    const form           = document.getElementById('modalLoginForm');
+    const loginBtnLabel  = document.getElementById('kuLoginLabel');
+    const headerLoginBtn = document.getElementById('kuLoginBtn');
+    const scrollNotice   = document.getElementById('scrollNotice');
+    const countdownNum   = document.getElementById('countdownNumber');
+    const countdownCircle= document.getElementById('countdownCircle');
+    const toast          = document.getElementById('kuToast');
+
+    countdownCircle.style.strokeDasharray  = CIRCUMFERENCE;
+    countdownCircle.style.strokeDashoffset = 0;
+
+document.getElementById("kuCartBtn")
+.addEventListener("click", function () {
+
+   window.location.href = "cart.html";
+
+});
+    /* ── Toast helper ──────────────────────────────────────── */
+    function showToast(msg) {
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2500);
+    }
+
+    /* ── Open modal ────────────────────────────────────────── */
+    function openLoginModal(source) {
+      if (isLoggedIn) { showToast('✅ You are already signed in!'); return; }
+      overlay.classList.add('active');
+      document.body.style.overflow = 'hidden';
+      // stop scroll countdown if running
+      stopScrollCountdown();
+      // focus email
+      setTimeout(() => document.getElementById('modalEmail')?.focus(), 350);
+    }
+
+    /* ── Close modal ───────────────────────────────────────── */
+    function closeLoginModal() {
+      overlay.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    closeBtn.addEventListener('click', closeLoginModal);
+
+    // Click outside card to close
+    overlay.addEventListener('click', function(e) {
+      if (!card.contains(e.target)) closeLoginModal();
+    });
+
+    // Escape key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && overlay.classList.contains('active')) closeLoginModal();
+    });
+
+    /* ── Form submit ───────────────────────────────────────── */
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const email    = document.getElementById('modalEmail').value.trim();
+      const password = document.getElementById('modalPassword').value.trim();
+      if (!email || !password) {
+        showToast('⚠️ Please fill in all fields');
+        return;
+      }
+      // Simulate login success
+      isLoggedIn = true;
+      const firstName = email.split('@')[0];
+      if (loginBtnLabel) loginBtnLabel.textContent = 'Hi, ' + firstName;
+      const sidebarLabel = document.getElementById('kuSidebarLoginLabel');
+      if (sidebarLabel) sidebarLabel.textContent = 'Hi, ' + firstName;
+      if (headerLoginBtn) { const icon = headerLoginBtn.querySelector('i'); if (icon) icon.className = 'fas fa-user-check'; }
+      localStorage.setItem('ku_user_name', firstName);
+      closeLoginModal();
+      showToast('✅ Signed in successfully! Welcome back 🎉');
+    });
+
+    /* ── Social logins ─────────────────────────────────────── */
+    function googleLogin() {
+  window.location.href = "http://localhost:8080/auth/google"; // ✅ redirects to your server
+   }
+    function appleLogin() {
+      showToast('🍎 Apple ID login — connect your API here');
+    }
+
+    /* ── SCROLL TRIGGER (fires once after user scrolls, 10s countdown) ── */
+    function startScrollCountdown() {
+      secondsLeft = 10;
+      countdownNum.textContent = secondsLeft;
+      countdownCircle.style.strokeDashoffset = 0;
+      scrollNotice.classList.add('visible');
+
+      scrollCountdownId = setInterval(function() {
+        secondsLeft--;
+        countdownNum.textContent = secondsLeft;
+
+        // Update ring: dashoffset goes from 0 → CIRCUMFERENCE
+        const progress = (10 - secondsLeft) / 10;
+        countdownCircle.style.strokeDashoffset = CIRCUMFERENCE * progress;
+
+        if (secondsLeft <= 0) {
+          stopScrollCountdown();
+          // Auto-open modal
+          if (!isLoggedIn && !overlay.classList.contains('active')) {
+            openLoginModal('scroll-auto');
+          }
+        }
+      }, 1000);
+    }
+
+    function stopScrollCountdown() {
+      if (scrollCountdownId) {
+        clearInterval(scrollCountdownId);
+        scrollCountdownId = null;
+      }
+      scrollNotice.classList.remove('visible');
+    }
+
+    // Listen for first scroll
+    function onFirstScroll() {
+      if (scrollTriggered || isLoggedIn) return;
+      // Only trigger if user has scrolled down at least 80px
+      if (window.scrollY < 80) return;
+      scrollTriggered = true;
+      window.removeEventListener('scroll', onFirstScroll);
+      startScrollCountdown();
+    }
+    
+    window.addEventListener('scroll', onFirstScroll, { passive: true });
+
+    // Check if user is logged in and show their name
+fetch("/get-user")
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      isLoggedIn = true;
+      const firstName = data.name.split(" ")[0];
+      if (loginBtnLabel) loginBtnLabel.textContent = "Hi, " + firstName;
+      const sidebarLabel = document.getElementById("kuSidebarLoginLabel");
+      if (sidebarLabel) sidebarLabel.textContent = "Hi, " + firstName;
+      localStorage.setItem("ku_user_name", firstName);
+    }
+  })
+  .catch(() => {}); // silent fail if not logged in
+  </script>
+
+
+</body>
+</html>

@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Satisfy&family=Edu+VIC+WA+NT+Hand&display=swap" rel="stylesheet">
+  <title>Sign Up · Kusumira</title>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background-image: url('login-img.jpg');
+      background-attachment: fixed;
+      background-size: cover;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1rem;
+      position: relative;
+    }
+
+    /* Soft dark overlay on background */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 10, 5, 0.55);
+      backdrop-filter: blur(3px);
+      -webkit-backdrop-filter: blur(3px);
+      z-index: 0;
+    }
+
+    /* ── Card ───────────────────────────────────────── */
+    .signup-card {
+      position: relative;
+      z-index: 1;
+      background: rgba(255, 255, 255, 0.97);
+      border-radius: 28px;
+      box-shadow: 0 30px 70px -10px rgba(0,0,0,0.45),
+                  0 0 0 1px rgba(231,155,56,0.15);
+      width: 100%;
+      max-width: 440px;
+      padding: 2.8rem 2.5rem 2.2rem;
+      animation: slideUp 0.4s cubic-bezier(0.22,1,0.36,1);
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(36px) scale(0.96); }
+      to   { opacity: 1; transform: translateY(0)    scale(1); }
+    }
+
+    /* ── Logo & headings ────────────────────────────── */
+    .modal-logo {
+      font-family: 'Satisfy', cursive;
+      font-size: 1.75rem;
+      color: #ca862c;
+      text-align: center;
+      margin-bottom: 0.15rem;
+    }
+
+    .modal-tagline {
+      text-align: center;
+      color: #aaa;
+      font-size: 0.87rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .modal-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #1a1a1a;
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    /* ── Input fields ───────────────────────────────── */
+    .modal-field {
+      position: relative;
+      margin-bottom: 1rem;
+    }
+
+    .modal-field input {
+      width: 100%;
+      padding: 0.85rem 1rem 0.85rem 2.7rem;
+      border: 1.5px solid #e5d9cc;
+      border-radius: 50px;
+      font-size: 0.95rem;
+      outline: none;
+      background: #fafafa;
+      color: #222;
+      transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+      margin-bottom: 0;
+    }
+
+    .modal-field input:focus {
+      border-color: #e79b38;
+      box-shadow: 0 0 0 3px rgba(231,155,56,0.12);
+      background: #fff;
+    }
+
+    .modal-field i {
+      position: absolute;
+      left: 1.05rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #ccc;
+      font-size: 0.9rem;
+      pointer-events: none;
+      transition: color 0.2s;
+    }
+
+    .modal-field:focus-within i {
+      color: #e79b38;
+    }
+
+    /* Password strength bar */
+    .strength-bar {
+      height: 4px;
+      border-radius: 2px;
+      background: #eee;
+      margin-top: 6px;
+      overflow: hidden;
+    }
+    .strength-bar-inner {
+      height: 100%;
+      border-radius: 2px;
+      width: 0%;
+      transition: width 0.3s, background 0.3s;
+    }
+    .strength-label {
+      font-size: 0.73rem;
+      color: #aaa;
+      margin-top: 3px;
+      margin-left: 4px;
+    }
+
+    /* ── Terms checkbox ─────────────────────────────── */
+    .terms-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+      font-size: 0.84rem;
+      color: #666;
+      margin-bottom: 1.3rem;
+      padding: 0 0.3rem;
+      line-height: 1.4;
+    }
+    .terms-row input[type="checkbox"] {
+      accent-color: #e79b38;
+      margin-top: 2px;
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+    .terms-row a {
+      color: #e79b38;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .terms-row a:hover { text-decoration: underline; }
+
+    /* ── Submit button ──────────────────────────────── */
+    .modal-submit-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #e79b38, #ca762c);
+      border: none;
+      border-radius: 50px;
+      padding: 0.95rem;
+      color: white;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.2s;
+      box-shadow: 0 8px 20px -6px rgba(202,118,44,0.55);
+      letter-spacing: 0.3px;
+    }
+    .modal-submit-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 24px -6px rgba(202,118,44,0.65);
+    }
+    .modal-submit-btn:active {
+      transform: translateY(0);
+    }
+
+    /* ── Divider ────────────────────────────────────── */
+    .modal-divider {
+      display: flex; align-items: center; gap: 0.8rem;
+      margin: 1.2rem 0;
+      color: #bbb; font-size: 0.83rem;
+    }
+    .modal-divider::before, .modal-divider::after {
+      content: ''; flex: 1; height: 1px; background: #ede5d8;
+    }
+
+    /* ── Social buttons ─────────────────────────────── */
+    .modal-social { display: flex; gap: 10px; }
+
+    .modal-social-btn {
+      flex: 1;
+      display: flex; align-items: center; justify-content: center; gap: 7px;
+      padding: 0.75rem;
+      border: 1.5px solid #e8ddd0;
+      border-radius: 50px;
+      background: white;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: #333;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s, transform 0.12s;
+    }
+    .modal-social-btn:hover {
+      background: #fff8f0;
+      border-color: #e79b38;
+      transform: translateY(-1px);
+    }
+
+    /* ── Sign in link ───────────────────────────────── */
+    .modal-signin {
+      text-align: center;
+      font-size: 0.88rem;
+      color: #888;
+      margin-top: 1.2rem;
+    }
+    .modal-signin a {
+      color: #e79b38;
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .modal-signin a:hover { text-decoration: underline; }
+
+    /* ── Toast ──────────────────────────────────────── */
+    .ku-toast {
+      position: fixed;
+      bottom: 28px; left: 50%;
+      transform: translateX(-50%) translateY(10px);
+      background: #1a1a1a;
+      color: white;
+      padding: 0.75rem 2rem;
+      border-radius: 50px;
+      font-size: 0.92rem;
+      font-weight: 500;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+      opacity: 0;
+      transition: opacity 0.25s, transform 0.25s;
+      pointer-events: none;
+      z-index: 9999;
+      white-space: nowrap;
+    }
+    .ku-toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ── Error state ────────────────────────────────── */
+    .modal-field input.error {
+      border-color: #e74c3c;
+      box-shadow: 0 0 0 3px rgba(231,76,60,0.1);
+    }
+    .modal-field input.success {
+      border-color: #2ecc71;
+    }
+
+    @media (max-width: 480px) {
+      .signup-card { padding: 2rem 1.4rem 1.8rem; }
+      .modal-social { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Toast notification -->
+  <div class="ku-toast" id="kuToast"></div>
+
+  <div class="signup-card">
+
+    <!-- Logo -->
+    <div class="modal-logo">Kusumira</div>
+    <p class="modal-tagline">Handmade with love, crafted with thread 🧶</p>
+    <h2 class="modal-title">Create your account ✨</h2>
+
+    <form id="signupForm" novalidate>
+
+      <!-- Full Name -->
+      <div class="modal-field">
+        <input type="text" id="name" placeholder="Full Name" required autocomplete="name">
+        <i class="fas fa-user"></i>
+      </div>
+
+      <!-- Email -->
+      <div class="modal-field">
+        <input type="email" id="email" placeholder="Email address" required autocomplete="email">
+        <i class="fas fa-envelope"></i>
+      </div>
+
+      <!-- Password -->
+      <div class="modal-field">
+        <input type="password" id="password" placeholder="Password" required autocomplete="new-password"
+          oninput="checkStrength(this.value)">
+        <i class="fas fa-lock"></i>
+        <div class="strength-bar"><div class="strength-bar-inner" id="strengthBar"></div></div>
+        <div class="strength-label" id="strengthLabel"></div>
+      </div>
+
+      <!-- Confirm Password -->
+      <div class="modal-field">
+        <input type="password" id="confirmPassword" placeholder="Confirm Password" required autocomplete="new-password">
+        <i class="fas fa-shield-halved"></i>
+      </div>
+
+      <!-- Terms -->
+      <label class="terms-row">
+        <input type="checkbox" id="termsCheck">
+        I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
+      </label>
+
+      <button type="submit" class="modal-submit-btn">
+        <i class="fas fa-user-plus" style="margin-right:6px;"></i> Create Account
+      </button>
+
+      <div class="modal-divider">or sign up with</div>
+
+      <div class="modal-social">
+        <button type="button" class="modal-social-btn" onclick="signUpWithGoogle()">
+          <i class="fab fa-google" style="color:#e34234;"></i> Google
+        </button>
+        <button type="button" class="modal-social-btn" onclick="signUpWithApple()">
+          <i class="fab fa-apple" style="color:#000;"></i> Apple ID
+        </button>
+      </div>
+
+      <div class="modal-signin">
+        Already have an account? <a href="about.html">Sign In</a>
+      </div>
+
+    </form>
+  </div>
+
+  <script>
+    const toast = document.getElementById('kuToast');
+
+    /* ── Toast ────────────────────────────────────── */
+    function showToast(msg, duration = 2800) {
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), duration);
+    }
+
+    /* ── Password strength meter ──────────────────── */
+    function checkStrength(val) {
+      const bar   = document.getElementById('strengthBar');
+      const label = document.getElementById('strengthLabel');
+      let score   = 0;
+      if (val.length >= 8)          score++;
+      if (/[A-Z]/.test(val))        score++;
+      if (/[0-9]/.test(val))        score++;
+      if (/[^A-Za-z0-9]/.test(val)) score++;
+
+      const levels = [
+        { pct: '0%',   color: '#eee',    text: '' },
+        { pct: '25%',  color: '#e74c3c', text: '🔴 Weak' },
+        { pct: '50%',  color: '#f39c12', text: '🟡 Fair' },
+        { pct: '75%',  color: '#3498db', text: '🔵 Good' },
+        { pct: '100%', color: '#2ecc71', text: '🟢 Strong' },
+      ];
+      const lvl = levels[score] || levels[0];
+      bar.style.width      = val.length ? lvl.pct   : '0%';
+      bar.style.background = lvl.color;
+      label.textContent    = val.length ? lvl.text  : '';
+    }
+
+    /* ── Field validation helpers ─────────────────── */
+    function setFieldState(input, ok) {
+      input.classList.toggle('error',   !ok);
+      input.classList.toggle('success',  ok);
+    }
+
+    /* ── Form submit ──────────────────────────────── */
+    document.getElementById('signupForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const name     = document.getElementById('name');
+      const email    = document.getElementById('email');
+      const password = document.getElementById('password');
+      const confirm  = document.getElementById('confirmPassword');
+      const terms    = document.getElementById('termsCheck');
+
+      let valid = true;
+
+      // Name
+      if (!name.value.trim()) {
+        setFieldState(name, false);
+        valid = false;
+      } else {
+        setFieldState(name, true);
+      }
+
+      // Email
+      const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim());
+      setFieldState(email, emailOk);
+      if (!emailOk) valid = false;
+
+      // Password length
+      if (password.value.length < 6) {
+        setFieldState(password, false);
+        valid = false;
+      } else {
+        setFieldState(password, true);
+      }
+
+      // Confirm
+      const matchOk = confirm.value === password.value && confirm.value !== '';
+      setFieldState(confirm, matchOk);
+      if (!matchOk) {
+        valid = false;
+        showToast('⚠️ Passwords do not match!');
+        return;
+      }
+
+      // Terms
+      if (!terms.checked) {
+        showToast('⚠️ Please accept the Terms of Service');
+        return;
+      }
+
+      if (!valid) {
+        showToast('⚠️ Please fill in all fields correctly');
+        return;
+      }
+
+      // ✅ Success
+      // ✅ Send data to backend
+fetch("http://localhost:8080/signup", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    name: name.value.trim(),
+    email: email.value.trim(),
+    password: password.value
+  })
+})
+.then(res => res.json())
+.then(data => {
+  if (data.success) {
+    showToast("✅ Account created successfully!");
+    setTimeout(() => {
+      window.location.href = "about.html";
+    }, 1500);
+  } else {
+    showToast("❌ " + data.message);
+  }
+})
+.catch(err => {
+  console.error(err);
+  showToast("❌ Server error!");
+});
+    });
+
+    /* ── Social ───────────────────────────────────── */
+    function signUpWithGoogle() {
+  window.location.href = "http://localhost:8080/auth/google";
+}
+    function signUpWithApple() {
+  window.location.href = "http://localhost:8080/auth/apple";
+}
+
+    /* ── Live confirm-password feedback ──────────── */
+    document.getElementById('confirmPassword').addEventListener('input', function() {
+      const pw = document.getElementById('password').value;
+      if (this.value.length > 0) {
+        setFieldState(this, this.value === pw);
+      } else {
+        this.classList.remove('error', 'success');
+      }
+    });
+  </script>
+  <script>window.KU_ACTIVE_PAGE = 'signup';</script>
+  <script src="nav-component.js"></script>
+</body>
+</html>

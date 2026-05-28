@@ -1,0 +1,481 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kusumira | Artisan Crochet</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="shop.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Edu+VIC+WA+NT+Hand&family=Noto+Serif+Oriya:wght@400..700&family=Playwrite+CA:wght@100..400&family=Satisfy&display=swap" rel="stylesheet">
+</head>
+<body>
+<!-- ============================================================
+     SHARED PRODUCT DATABASE
+     This is the single source of truth. shop-item.html reads from
+     localStorage when you click a card.
+     ============================================================ -->
+<script>
+  // ── PRODUCT DATABASE ─────────────────────────────────────────
+  window.KUSUMIRA_PRODUCTS = [
+    // ── Flower Edit ──────────────────────────────────────────
+    {
+      id: "rose-gold",
+      name: "Rose Gold",
+      category: "🌸 Flowers",
+      price: 549,
+      originalPrice: 699,
+      image: "rose.PNG",
+      rating: 4.8,
+      reviewCount: 214,
+      description: "A timeless crochet rose crafted with gold-tipped yarn, perfect as a bouquet accent or standalone décor piece. Each petal is individually shaped by hand for lifelike elegance.",
+      badges: ["🧶 Handmade", "🌿 Eco-Friendly", "✨ Artisan Craft"],
+      colors: ["#e8a0a0","#f5c5c5","#d4915a","#c8a0c8"],
+      sizes: ["Single", "Pair", "Bouquet of 3"],
+    },
+    {
+      id: "lavender-sprig",
+      name: "Lavender Sprig",
+      category: "🌸 Flowers",
+      price: 399,
+      originalPrice: 499,
+      image: "lanvendar.png",
+      rating: 4.6,
+      reviewCount: 87,
+      description: "Soft purple lavender sprigs crocheted with premium cotton yarn. Aromatherapy-inspired design that never wilts — a forever gift for any occasion.",
+      badges: ["🧶 Handmade", "💜 Calming Vibes"],
+      colors: ["#c8a0c8","#b09ac0","#9988b0","#e0d0f0"],
+      sizes: ["Single", "Bundle of 3", "Bundle of 5"],
+    },
+    {
+      id: "sunflower",
+      name: "Sunflower",
+      category: "🌸 Flowers",
+      price: 449,
+      originalPrice: 549,
+      image: "sunflower.PNG",
+      rating: 4.9,
+      reviewCount: 312,
+      description: "Bright and cheerful crochet sunflower with a contrasting brown centre and golden petals. A burst of sunshine for your home — potted or as a gifting stem.",
+      badges: ["🧶 Handmade", "☀️ Fan Favourite", "✨ Artisan Craft"],
+      colors: ["#f5d060","#f0c040","#e8b030","#ffe080"],
+      sizes: ["Small", "Medium", "Large"],
+    },
+    {
+      id: "daisy-chain",
+      name: "Daisy Chain",
+      category: "🌸 Flowers",
+      price: 379,
+      originalPrice: 449,
+      image: "daisy.webp",
+      rating: 4.5,
+      reviewCount: 143,
+      description: "Delicate white daisies linked into a charming chain. Great as a hair accessory, wreath accent, or decorative garland. Light, durable, and washable.",
+      badges: ["🧶 Handmade", "🌼 Everyday Joy"],
+      colors: ["#ffffff","#f5f0e0","#e8f0d8","#f0e8ff"],
+      sizes: ["30 cm", "50 cm", "100 cm"],
+    },
+
+    // ── Keychain Stories ──────────────────────────────────────
+    {
+      id: "mini-bear",
+      name: "Mini Bear",
+      category: "🔑 Keychains",
+      price: 299,
+      originalPrice: 349,
+      image: "bear.JPG",
+      rating: 4.9,
+      reviewCount: 521,
+      description: "Adorable amigurumi bear keychain crocheted with soft acrylic yarn. Comes with a sturdy metal ring. The perfect bag charm or gift for bear lovers of all ages.",
+      badges: ["🧶 Handmade", "🐻 Best Seller", "🎁 Great Gift"],
+      colors: ["#d4a574","#a08060","#f5d0b0","#808080"],
+      sizes: ["5 cm", "7 cm", "10 cm"],
+    },
+    {
+      id: "cactus-keychain",
+      name: "Cactus",
+      category: "🔑 Keychains",
+      price: 249,
+      originalPrice: 299,
+      image: "sunkey.JPG",
+      rating: 4.7,
+      reviewCount: 198,
+      description: "A quirky mini crochet cactus keychain that's impossible not to smile at. Made with green cotton yarn and tiny details — no watering required!",
+      badges: ["🧶 Handmade", "🌵 Trendy"],
+      colors: ["#7da87b","#5a8a58","#a0c898","#4a7048"],
+      sizes: ["5 cm", "8 cm"],
+    },
+    {
+      id: "rain-cloud",
+      name: "Rain Cloud",
+      category: "🔑 Keychains",
+      price: 279,
+      originalPrice: 329,
+      image: "batterfly.JPG",
+      rating: 4.6,
+      reviewCount: 76,
+      description: "A whimsical crochet rain cloud keychain with tiny dangling raindrops in blue yarn. Soft, puffy, and utterly charming — brightens any gloomy day.",
+      badges: ["🧶 Handmade", "⛅ Mood Booster"],
+      colors: ["#8fa8c8","#b0c8e8","#d0e0f8","#c8c8d8"],
+      sizes: ["6 cm", "9 cm"],
+    },
+    {
+      id: "strawberry-keychain",
+      name: "Strawberry",
+      category: "🔑 Keychains",
+      price: 269,
+      originalPrice: 319,
+      image: "stawri.jpeg",
+      rating: 4.8,
+      reviewCount: 267,
+      description: "Sweet crochet strawberry keychain with seed-stitch detailing and a green leaf top. Made with soft cotton — a fruity fashion statement for bags and keys.",
+      badges: ["🧶 Handmade", "🍓 Super Cute", "🎁 Great Gift"],
+      colors: ["#e05050","#c83838","#e87070","#f0a0a0"],
+      sizes: ["5 cm", "8 cm"],
+    },
+
+    // ── All Artifacts ─────────────────────────────────────────
+    {
+      id: "crochet-dahlia",
+      name: "Crochet Dahlia",
+      category: "🌼 Flowers",
+      price: 299,
+      originalPrice: 379,
+      image: "image3.jpg",
+      rating: 4.7,
+      reviewCount: 103,
+      description: "A bold, layered crochet dahlia with rich petal depth. Crafted using variegated yarn for a natural gradient effect. Perfect for home décor or as a gift.",
+      badges: ["🧶 Handmade", "🌸 Statement Piece"],
+      colors: ["#c060a0","#a04080","#e080c0","#802060"],
+      sizes: ["Small", "Medium", "Large"],
+    },
+    {
+      id: "woolly-teddy",
+      name: "Woolly Teddy",
+      category: "🧸 Dolls",
+      price: 499,
+      originalPrice: 599,
+      image: "rose.png",
+      rating: 4.9,
+      reviewCount: 445,
+      description: "A huggable amigurumi teddy bear crocheted with ultra-soft wool blend yarn. Safe for children (3+). Comes gift-wrapped with a handwritten Kusumira tag.",
+      badges: ["🧶 Handmade", "🐻 Kid Safe", "🎁 Bestseller"],
+      colors: ["#d4a574","#a08060","#f5d0b0","#e0b898"],
+      sizes: ["15 cm", "25 cm", "35 cm"],
+    },
+    {
+      id: "potted-succulent",
+      name: "Potted Succulent",
+      category: "🏺 Pots",
+      price: 349,
+      originalPrice: 429,
+      image: "keychain1.jpg",
+      rating: 4.5,
+      reviewCount: 89,
+      description: "A lifelike crochet succulent in a tiny terracotta-style pot. Zero maintenance, all aesthetic. Ideal for desks, shelves, or as a housewarming gift.",
+      badges: ["🧶 Handmade", "🌵 Low Maintenance", "🏺 Pot Included"],
+      colors: ["#7da87b","#5a8a58","#a8c890","#4a8048"],
+      sizes: ["Mini (8cm)", "Medium (12cm)", "Large (18cm)"],
+    },
+    {
+      id: "boho-bag",
+      name: "Boho Bag",
+      category: "👜 Bags",
+      price: 799,
+      originalPrice: 999,
+      image: "lanvendar.png",
+      rating: 4.8,
+      reviewCount: 312,
+      description: "A stunning boho crochet tote handcrafted by skilled artisans using 100% natural cotton yarn. Spacious, stylish, and strong — perfect for beach, market, or a casual day out.",
+      badges: ["🧶 Handmade", "🌿 Eco-Friendly", "✨ Artisan Craft"],
+      colors: ["#d4915a","#7da87b","#8fa8c8","#c8a0c8","#e8d890"],
+      sizes: ["Small", "Medium", "Large"],
+    },
+    {
+      id: "market-tote",
+      name: "Market Tote",
+      category: "👜 Bags",
+      price: 699,
+      originalPrice: 849,
+      image: "batterfly.jpg",
+      rating: 4.6,
+      reviewCount: 178,
+      description: "Open-weave crochet market tote — breathable, lightweight, and roomy enough for your weekend haul. Made with recycled cotton twine by artisan women's collectives.",
+      badges: ["🧶 Handmade", "♻️ Recycled Cotton", "🌿 Eco-Friendly"],
+      colors: ["#c8a888","#a08870","#e0c8a8","#808070"],
+      sizes: ["Standard", "Large"],
+    },
+    {
+      id: "baby-booties",
+      name: "Baby Booties",
+      category: "👶 Baby",
+      price: 399,
+      originalPrice: 479,
+      image: "sunflower.png",
+      rating: 5.0,
+      reviewCount: 567,
+      description: "Cloud-soft crochet baby booties made with hypoallergenic merino wool. Non-slip sole, easy-on elastic cuff. The sweetest baby shower gift — comes in a gift box.",
+      badges: ["🧶 Handmade", "👶 Baby Safe", "🎁 Gift Box Included"],
+      colors: ["#f5d0b0","#d0e8f8","#f0d8e8","#d8f0d0"],
+      sizes: ["0–3 months", "3–6 months", "6–12 months"],
+    },
+    {
+      id: "lace-doily",
+      name: "Lace Doily",
+      category: "🕯️ Coasters",
+      price: 249,
+      originalPrice: 299,
+      image: "bottle.jpeg",
+      rating: 4.4,
+      reviewCount: 62,
+      description: "Intricate crochet lace doily in crisp white cotton. Perfect as a table centrepiece, frame insert, or vase base. Machine washable. Sold individually or as a set.",
+      badges: ["🧶 Handmade", "🤍 Classic Design"],
+      colors: ["#ffffff","#f8f0e0","#f0e8d0"],
+      sizes: ["15 cm", "25 cm", "35 cm"],
+    },
+    {
+      id: "amigurumi-bunny",
+      name: "Amigurumi Bunny",
+      category: "🧸 Dolls",
+      price: 599,
+      originalPrice: 749,
+      image: "bunny.jpg",
+      rating: 4.9,
+      reviewCount: 389,
+      description: "A floppy-eared crochet bunny stuffed with hypoallergenic fiberfill. Hand-embroidered face details, poseable ears, and a tiny bow. Children's favourite and collector's delight.",
+      badges: ["🧶 Handmade", "🐰 Fan Favourite", "🎁 Gift Ready"],
+      colors: ["#f5f0e8","#e0d8c8","#d0c8b8","#c8b8a8"],
+      sizes: ["15 cm", "25 cm", "40 cm"],
+    },
+    {
+      id: "phone-sling",
+      name: "Phone Sling",
+      category: "👜 Bags",
+      price: 459,
+      originalPrice: 559,
+      image: "bouquet.webp",
+      rating: 4.7,
+      reviewCount: 134,
+      description: "Hands-free crochet phone sling bag with adjustable strap and card pocket. Fits most smartphones up to 6.7\". Stylish and practical — made in cotton-linen blend.",
+      badges: ["🧶 Handmade", "📱 Phone Friendly", "✨ Trending"],
+      colors: ["#d4915a","#7da87b","#8fa8c8","#c8a0c8"],
+      sizes: ["Standard (fits up to 6.7\")"],
+    },
+    {
+      id: "coaster-set",
+      name: "Coaster Set",
+      category: "🕯️ Coasters",
+      price: 199,
+      originalPrice: 249,
+      image: "coaster.jpg",
+      rating: 4.5,
+      reviewCount: 203,
+      description: "Set of 4 round crochet coasters in mixed earth tones. Thick, absorbent, and heat-resistant up to 80°C. A simple upgrade for any table — handmade with love.",
+      badges: ["🧶 Handmade", "🏡 Home Décor", "Set of 4"],
+      colors: ["#d4915a","#7da87b","#8fa8c8","#e8d890"],
+      sizes: ["Set of 4", "Set of 6"],
+    },
+  ];
+
+  // Helper: go to product page
+  window.goToProduct = function(productId) {
+    window.location.href = `shop-item.html?id=${encodeURIComponent(productId)}`;
+  };
+ </script>
+
+<!-- Shared nav injected by nav-component.js -->
+
+<!-- HERO -->
+<section class="shop-hero">
+  <div class="container">
+    <h1>Handwoven with Heritage</h1>
+    <p style="font-size: 1.3rem;">Each stitch tells a story — discover timeless crochet, made by artisans.</p>
+    <div class="search-bar">
+      <input type="text" placeholder="Search for flowers, keychains, dolls ..." />
+      <button><i class="fas fa-search"></i> Find</button>
+    </div>
+  </div>
+</section>
+
+<!-- CATEGORY SLIDER -->
+<section class="container category-sliders">
+  <h2>Collections</h2>
+  <div class="cat-slider">
+    <button class="slide-btn" onclick="slide(this,-1)"><i class="fas fa-chevron-left"></i></button>
+    <div class="cat-track">
+      <div class="cat-item">🌸 Combo</div>
+      <div class="cat-item">🌿 Single</div>
+      <div class="cat-item">🔑 Keychains</div>
+      <div class="cat-item">🏺 Pots</div>
+      <div class="cat-item">🌼 Flowers</div>
+      <div class="cat-item">💐 Bouquet</div>
+      <div class="cat-item">🧸 Dolls</div>
+      <div class="cat-item">🕯️ Coasters</div>
+    </div>
+    <button class="slide-btn" onclick="slide(this,1)"><i class="fas fa-chevron-right"></i></button>
+  </div>
+</section>
+
+<style>
+  /* Make product cards clickable */
+  .product-card { cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; position: relative; }
+  .product-card:hover { transform: translateY(-4px); box-shadow: 0 12px 28px rgba(0,0,0,0.13); }
+  .product-card .view-badge {
+    position: absolute; top: 10px; right: 10px;
+    background: #e79b38; color: white; font-size: 0.72rem;
+    font-weight: 700; padding: 3px 10px; border-radius: 40px;
+    opacity: 0; transition: opacity 0.2s;
+    pointer-events: none;
+  }
+  .product-card:hover .view-badge { opacity: 1; }
+  .stars-sm { color: #f8b84a; font-size: 0.78rem; margin: 2px 0 4px; }
+  .review-sm { color: #888; font-size: 0.75rem; }
+</style>
+
+<!-- FEATURED: FLOWER EDIT -->
+<section class="products-container container">
+  <h2>✨ Flower Edit</h2>
+  <div class="product-section-row">
+    <div class="section-image">
+      <img src="flower.jpeg" alt="flower collection">
+    </div>
+    <div class="section-items" id="flowerSection"></div>
+  </div>
+
+  <!-- KEYCHAIN STORIES -->
+  <h2>🧶 Keychain Stories</h2>
+  <div class="product-section-row">
+    <div class="section-image">
+      <img src="keychain1.JPG" alt="keychains">
+      <h2>keychain</h2>
+    </div>
+    <div class="section-items" id="keychainSection"></div>
+  </div>
+</section>
+
+<!-- OFFER BANNER -->
+<section class="container offer-banner">
+  <h2>🎁 Monsoon Crochet Drop</h2>
+  <p style="font-size: 1.3rem;">Buy 2 flowers, get 1 keychain free · handcrafted with love</p>
+  <button>Shop the offer →</button>
+</section>
+
+<!-- ALL ARTIFACTS -->
+<section class="products-container container">
+  <h2>All Artifacts</h2>
+  <div class="product-grid" id="productGrid"></div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-container">
+    <div class="footer-col">
+      <h3>Kusumira</h3>
+      <p style="margin-bottom: 1.2rem;">Rooted in Indian craftsmanship, we create heirloom-quality crochet with contemporary soul. Every purchase empowers women artisans.</p>
+      <div class="social-links">
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-facebook-f"></i></a>
+        <a href="#"><i class="fab fa-pinterest"></i></a>
+        <a href="#"><i class="fab fa-youtube"></i></a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h3>Explore</h3>
+      <ul>
+        <li><a href="#">Shop all</a></li>
+        <li><a href="#">New arrivals</a></li>
+        <li><a href="#">Gift sets</a></li>
+        <li><a href="#">Custom order</a></li>
+        <li><a href="#">Artisan stories</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h3>Support</h3>
+      <ul>
+        <li><a href="#">Contact</a></li>
+        <li><a href="#">Shipping</a></li>
+        <li><a href="#">Returns</a></li>
+        <li><a href="#">Care guide</a></li>
+        <li><a href="#">Privacy</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h3>Newsletter</h3>
+      <p style="margin-bottom: 0.5rem;">Be the first to know limited drops.</p>
+      <div class="newsletter">
+        <input type="email" placeholder="Your email">
+        <button>Join</button>
+      </div>
+      <p style="margin-top: 1.5rem; font-size: 0.8rem;">✉️ <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="cea6aba2a2a18ea5bbbdbba3a7bcafe0ada1a3">[email&#160;protected]</a></p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    © 2025 Kusumira — handcrafted with 💛 in India
+  </div>
+</footer>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  // ── Render helpers ──────────────────────────────────────────
+  function starHTML(rating) {
+    const full  = Math.floor(rating);
+    const half  = rating % 1 >= 0.5 ? 1 : 0;
+    const empty = 5 - full - half;
+    return (
+      '<i class="fas fa-star"></i>'.repeat(full) +
+      (half ? '<i class="fas fa-star-half-alt"></i>' : '') +
+      '<i class="far fa-star"></i>'.repeat(empty)
+    );
+  }
+
+  function productCardHTML(p) {
+    return `
+      <div class="product-card" onclick="goToProduct('${p.id}')">
+        <span class="view-badge">View →</span>
+        <img src="${p.image}" alt="${p.name}">
+        <h4>${p.name}</h4>
+        <div class="stars-sm">${starHTML(p.rating)} <span class="review-sm">(${p.reviewCount})</span></div>
+        <span class="price">₹${p.price} <small style="text-decoration:line-through;color:#aaa;font-size:0.8em;">₹${p.originalPrice}</small></span>
+        <button class="btn" onclick="event.stopPropagation(); goToProduct('${p.id}')">
+          <i class="fas fa-shopping-bag" style="margin-right:6px;"></i> Add
+        </button>
+      </div>`;
+  }
+
+  // ── Flower section (first 4 products with category Flowers) ──
+  const flowerProducts = window.KUSUMIRA_PRODUCTS.filter(p => p.id.match(/rose|lavender|sunflower|daisy/));
+  document.getElementById('flowerSection').innerHTML = flowerProducts.map(productCardHTML).join('');
+
+  // ── Keychain section ──────────────────────────────────────
+  const keychainProducts = window.KUSUMIRA_PRODUCTS.filter(p => p.category.includes('Keychains'));
+  document.getElementById('keychainSection').innerHTML = keychainProducts.map(productCardHTML).join('');
+
+  // ── All Artifacts grid (remaining products) ───────────────
+  const allProducts = window.KUSUMIRA_PRODUCTS.filter(p =>
+    !flowerProducts.includes(p) && !keychainProducts.includes(p)
+  );
+  document.getElementById('productGrid').innerHTML = allProducts.map(productCardHTML).join('');
+
+  // ── Slide & frame ─────────────────────────────────────────
+  function slide(btn, dir) {
+    const track = btn.closest('.cat-slider')?.querySelector(".cat-track");
+    if (track) track.scrollLeft += dir * 280;
+  }
+
+  function toggleFrame() {
+    const frame = document.getElementById("sideFrame");
+    frame.style.right = frame.style.right === "0px" ? "-320px" : "0px";
+  }
+
+  window.addEventListener('click', function(e) {
+    const frame = document.getElementById('sideFrame');
+    if (frame && !frame.contains(e.target) && e.target.className !== 'log-btn') {
+      frame.style.right = '-320px';
+    }
+    
+  });
+</script>
+<script>window.KU_ACTIVE_PAGE = 'shop';</script>
+<script src="nav-component.js"></script>
+</body>
+</html>

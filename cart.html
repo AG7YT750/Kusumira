@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kusumira · Cart</title>
+
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f8f8f8;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #e79b38;
+      margin-bottom: 25px;
+    }
+
+    .cart-box {
+      max-width: 900px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    }
+
+    .item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 15px;
+      border-bottom: 1px solid #eee;
+      padding: 15px 0;
+    }
+
+    .item img {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 10px;
+      background: #f2f2f2;
+    }
+
+    .info {
+      flex: 1;
+    }
+
+    .info h3 {
+      margin-bottom: 6px;
+      color: #333;
+    }
+
+    .info p {
+      color: #666;
+      font-size: 15px;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .actions button {
+      padding: 7px 12px;
+      border: none;
+      background: #e79b38;
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: 0.2s;
+      font-weight: 500;
+    }
+
+    .actions button:hover {
+      background: #ca762c;
+    }
+
+    .total {
+      max-width: 900px;
+      margin: 20px auto 10px;
+      text-align: right;
+      font-size: 22px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .checkout {
+      display: block;
+      width: 900px;
+      max-width: 100%;
+      margin: auto;
+      padding: 14px;
+      background: #ca762c;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      transition: 0.2s;
+    }
+
+    .checkout:hover {
+      background: #b86622;
+    }
+
+    .empty-msg {
+      text-align: center;
+      padding: 40px 20px;
+      font-size: 22px;
+      color: #777;
+    }
+
+    .continue-shopping {
+      display: inline-block;
+      margin-top: 15px;
+      padding: 10px 18px;
+      background: #e79b38;
+      color: white;
+      text-decoration: none;
+      border-radius: 8px;
+      font-size: 15px;
+    }
+
+    .continue-shopping:hover {
+      background: #ca762c;
+    }
+
+    @media(max-width:700px){
+
+      .item{
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .actions{
+        width:100%;
+      }
+
+      .actions button{
+        flex:1;
+      }
+
+      .total{
+        text-align:center;
+      }
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <h1>🛒 Your Cart</h1>
+
+  <div class="cart-box" id="cartBox"></div>
+
+  <div class="total">
+    Total: ₹<span id="totalAmount">0</span>
+  </div>
+
+  <button class="checkout" onclick="checkout()">
+    Proceed to Checkout
+  </button>
+
+  <script>
+
+  // =====================================================
+  // LOAD CART
+  // =====================================================
+
+  let cart =
+    JSON.parse(localStorage.getItem("ku_cart")) || [];
+
+  // Create cart if missing
+  if (!localStorage.getItem("ku_cart")) {
+    localStorage.setItem("ku_cart", JSON.stringify([]));
+  }
+
+  // =====================================================
+  // RENDER CART
+  // =====================================================
+
+  function renderCart() {
+
+    const box =
+      document.getElementById("cartBox");
+
+    const totalBox =
+      document.getElementById("totalAmount");
+
+    box.innerHTML = "";
+
+    // Empty Cart
+    if (cart.length === 0) {
+
+      box.innerHTML = `
+        <div class="empty-msg">
+          Your cart is empty 😢
+          <br>
+
+          <a href="shop.html"
+             class="continue-shopping">
+
+             Continue Shopping
+
+          </a>
+        </div>
+      `;
+
+      totalBox.innerText = "0";
+
+      document.title = "Kusumira · Empty Cart";
+
+      updateCartBadge();
+
+      return;
+    }
+
+    let total = 0;
+
+    cart.forEach((item, index) => {
+
+      const qty =
+        item.qty || 1;
+
+      const price =
+        item.price || 0;
+
+      total += price * qty;
+
+      box.innerHTML += `
+
+        <div class="item">
+
+          <img
+            src="${item.image}"
+            alt="${item.name}"
+
+            onerror="
+              this.src='https://via.placeholder.com/80'
+            "
+          >
+
+          <div class="info">
+
+            <h3>${item.name}</h3>
+
+            <p>
+              ₹${price} × ${qty}
+            </p>
+
+          </div>
+
+          <div class="actions">
+
+            <button
+              onclick="changeQty(${index}, 1)">
+              +
+            </button>
+
+            <button
+              onclick="changeQty(${index}, -1)">
+              −
+            </button>
+
+            <button
+              onclick="removeItem(${index})">
+              Remove
+            </button>
+
+          </div>
+
+        </div>
+
+      `;
+    });
+
+    totalBox.innerText = total;
+
+    document.title =
+      `Kusumira · Cart (${cart.length})`;
+
+    updateCartBadge();
+  }
+
+  // =====================================================
+  // CHANGE QUANTITY
+  // =====================================================
+
+  function changeQty(index, delta) {
+
+    cart[index].qty =
+      (cart[index].qty || 1) + delta;
+
+    // Remove if quantity <= 0
+    if (cart[index].qty <= 0) {
+
+      cart.splice(index, 1);
+
+    }
+
+    saveCart();
+  }
+
+  // =====================================================
+  // REMOVE ITEM
+  // =====================================================
+
+  function removeItem(index) {
+
+    cart.splice(index, 1);
+
+    saveCart();
+  }
+
+  // =====================================================
+  // SAVE CART
+  // =====================================================
+
+  function saveCart() {
+
+    localStorage.setItem(
+      "ku_cart",
+      JSON.stringify(cart)
+    );
+
+    renderCart();
+  }
+
+  // =====================================================
+  // UPDATE CART BADGE
+  // =====================================================
+
+  function updateCartBadge() {
+
+    const badge =
+      document.querySelector(".ku-cart-badge");
+
+    if (!badge) return;
+
+    const totalItems =
+      cart.reduce((sum, item) => {
+
+        return sum + (item.qty || 1);
+
+      }, 0);
+
+    badge.innerText = totalItems;
+  }
+
+  // =====================================================
+  // CHECKOUT
+  // =====================================================
+
+  function checkout() {
+
+    // Prevent empty checkout
+    if (cart.length === 0) {
+
+      alert("Your cart is empty 😢");
+
+      return;
+    }
+
+    // Save latest cart
+    localStorage.setItem(
+      "ku_cart",
+      JSON.stringify(cart)
+    );
+
+    // Nice feedback
+    const btn =
+      document.querySelector(".checkout");
+
+    btn.innerText = "Redirecting...";
+
+    btn.disabled = true;
+
+    // Redirect safely
+    setTimeout(() => {
+
+      window.location.href = "checkout.html";
+
+    }, 600);
+  }
+
+  // =====================================================
+  // AUTO SYNC
+  // =====================================================
+
+  window.addEventListener("storage", function () {
+
+    cart =
+      JSON.parse(localStorage.getItem("ku_cart"))
+      || [];
+
+    renderCart();
+  });
+
+  // =====================================================
+  // INITIAL RENDER
+  // =====================================================
+
+  renderCart();
+
+</script>
+
+</body>
+</html>
