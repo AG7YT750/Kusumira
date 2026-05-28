@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bloom & Charm · flowers, pots, keychains & dolls</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Satisfy&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    :root {
+      --gold: #e79b38;
+      --gold-dark: #c77e23;
+      --gold-light: #faf3ea;
+      --dark: #2c2118;
+      --text: #3d3228;
+      --muted: #6b5c4e;
+      --bg: #fdfaf6;
+      --white: #ffffff;
+      --card-shadow: 0 20px 60px -15px rgba(44,33,24,0.12);
+    }
+
+    body { font-family: 'DM Sans', Arial, sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+
+    /* ===== HEADER ===== */
+    .header {
+      background: url('header.JPG') center/cover no-repeat;
+      padding: 1rem 0;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+    }
+
+    .header-content {
+      max-width: 1280px;
+      margin: auto;
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+    }
+
+    .logo {
+      font-family: 'Satisfy', cursive;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: 0.05em;
+      flex-shrink: 0;
+      text-decoration: none;
+    }
+
+    .nav { display: flex; align-items: center; }
+    .nav a {
+      margin: 0 0.8rem;
+      text-decoration: none;
+      color: rgba(255,255,255,0.85);
+      font-weight: 500;
+      font-size: 0.97rem;
+      transition: color 0.2s;
+    }
+    .nav a:hover { color: var(--gold); }
+
+    /* Search */
+    .search-wrapper { position: relative; flex: 0 1 270px; }
+    .search-bar {
+      display: flex;
+      align-items: center;
+      background: rgba(255,255,255,0.1);
+      border: 1.5px solid rgba(255,255,255,0.2);
+      border-radius: 50px;
+      padding: 0.44rem 0.8rem 0.44rem 1.1rem;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .search-bar:focus-within {
+      background: rgba(255,255,255,0.18);
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(231,155,56,0.2);
+    }
+    .search-bar input {
+      background: transparent;
+      border: none;
+      outline: none;
+      color: #fff;
+      font-size: 0.93rem;
+      font-family: 'DM Sans', sans-serif;
+      width: 100%;
+    }
+    .search-bar input::placeholder { color: rgba(255,255,255,0.5); }
+    .search-bar button {
+      background: transparent;
+      border: none;
+      color: rgba(255,255,255,0.65);
+      cursor: pointer;
+      font-size: 0.95rem;
+      padding: 0 0.3rem;
+      transition: color 0.2s;
+      flex-shrink: 0;
+    }
+    .search-bar button:hover { color: var(--gold); }
+
+    .search-suggestions {
+      display: none;
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0; right: 0;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 15px 35px -8px rgba(90,50,20,0.25);
+      border: 1px solid #eddccb;
+      overflow: hidden;
+      z-index: 300;
+    }
+    .search-suggestions.show { display: block; }
+    .suggestion-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0.72rem 1.1rem;
+      font-size: 0.9rem;
+      color: var(--gold);
+      cursor: pointer;
+      transition: background 0.1s;
+    }
+    .suggestion-item i { color: var(--gold); width: 16px; }
+    .suggestion-item:hover { background: #fef5eb; }
+    .suggestion-item:not(:last-child) { border-bottom: 1px solid #f5e4d3; }
+
+    /* Header actions */
+    .header-actions { display: flex; align-items: center; gap: 0.75rem; flex-shrink: 0; }
+
+    .login-btn {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      background: transparent;
+      border: 1.5px solid rgba(255,255,255,0.35);
+      color: rgba(255,255,255,0.9);
+      border-radius: 50px;
+      padding: 0.48rem 1.1rem;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.92rem;
+      font-family: 'DM Sans', sans-serif;
+      transition: all 0.2s;
+    }
+    .login-btn:hover { background: rgba(255,255,255,0.1); border-color: var(--gold); color: var(--gold); }
+
+    .cart-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--gold-dark);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      padding: 0.48rem 1.1rem;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.92rem;
+      font-family: 'DM Sans', sans-serif;
+      transition: background 0.2s;
+    }
+    .cart-btn:hover { background: #8f4a1e; }
+
+    /* ===== LOGIN MODAL ===== */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(20,10,5,0.65);
+      backdrop-filter: blur(4px);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-overlay.active { display: flex; }
+
+    .login-modal {
+      background: #fff;
+      border-radius: 28px;
+      padding: 2.5rem 2.2rem 2rem;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 30px 60px -15px rgba(90,40,10,0.4);
+      animation: modalIn 0.25s ease;
+      position: relative;
+    }
+    @keyframes modalIn {
+      from { opacity: 0; transform: translateY(20px) scale(0.97); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 1.2rem; right: 1.2rem;
+      background: #f5ece2;
+      border: none;
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      cursor: pointer;
+      color: #5f4535;
+      font-size: 1rem;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.15s;
+    }
+    .modal-close:hover { background: var(--gold-dark); color: white; }
+
+    .modal-logo {
+      font-family: 'Satisfy', cursive;
+      font-size: 1.9rem;
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: 0.05em;
+      margin-bottom: 0.3rem;
+    }
+    .login-modal h3 { font-size: 1.45rem; color: #2e1f10; margin-bottom: 0.2rem; }
+    .login-modal .subtitle { color: #8a7060; font-size: 0.93rem; margin-bottom: 1.5rem; }
+
+    .modal-field { margin-bottom: 1.1rem; }
+    .modal-field label {
+      display: block;
+      font-weight: 600;
+      font-size: 0.88rem;
+      color: var(--gold);
+      margin-bottom: 0.4rem;
+    }
+    .modal-field input {
+      width: 100%;
+      padding: 0.78rem 1.1rem;
+      border: 1.5px solid #e2c9b4;
+      border-radius: 14px;
+      font-size: 0.97rem;
+      font-family: 'DM Sans', sans-serif;
+      outline: none;
+      color: #2e1f10;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .modal-field input:focus { border-color: var(--gold); box-shadow: 0 0 0 3px rgba(231,155,56,0.15); }
+    .modal-field input::placeholder { color: #b8a898; }
+
+    .modal-footer-link { display: flex; justify-content: flex-end; margin-bottom: 1.3rem; }
+    .modal-footer-link a { color: var(--gold); font-size: 0.88rem; text-decoration: none; font-weight: 500; }
+    .modal-footer-link a:hover { text-decoration: underline; }
+
+    .login-submit {
+      width: 100%;
+      background: var(--gold);
+      border: none;
+      color: white;
+      padding: 1rem;
+      border-radius: 60px;
+      font-weight: 700;
+      font-size: 1rem;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      box-shadow: 0 10px 20px -8px rgba(231,155,56,0.5);
+      transition: 0.2s;
+    }
+    .login-submit:hover { background: var(--gold-dark); transform: scale(1.01); }
+
+    .modal-divider {
+      display: flex; align-items: center; gap: 1rem;
+      margin: 1.3rem 0;
+      color: #b8a898; font-size: 0.85rem;
+    }
+    .modal-divider::before, .modal-divider::after { content: ''; flex: 1; height: 1px; background: #ecddd2; }
+
+    .social-login { display: flex; gap: 12px; }
+    .social-login button {
+      flex: 1; display: flex; align-items: center; justify-content: center;
+      gap: 8px; padding: 0.75rem;
+      border: 1.5px solid #e2c9b4; border-radius: 14px;
+      background: white; cursor: pointer;
+      font-weight: 600; font-size: 0.9rem; color: #4d3526;
+      font-family: 'DM Sans', sans-serif;
+      transition: 0.15s;
+    }
+    .social-login button:hover { background: #fef5eb; border-color: var(--gold-dark); }
+
+    .register-link { text-align: center; margin-top: 1.3rem; font-size: 0.88rem; color: #8a7060; }
+    .register-link a { color: var(--gold-dark); font-weight: 600; text-decoration: none; }
+    .register-link a:hover { text-decoration: underline; }
+
+    /* Toast */
+    .toast-message {
+      position: fixed;
+      bottom: 25px; left: 25px;
+      background: #3a1f0d;
+      color: white;
+      padding: 0.8rem 2rem;
+      border-radius: 60px;
+      font-weight: 500;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      opacity: 0;
+      transition: opacity 0.2s;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* ===== HERO ===== */
+    .hero {
+      height: 55vh;
+      background: linear-gradient(rgba(0,0,0,0.52), rgba(0,0,0,0.52)),
+        url('logo.JPG') center/cover;
+      display: flex; align-items: center; justify-content: center;
+      text-align: center;
+    }
+
+    .hero-content h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2.4rem, 5vw, 4.5rem);
+      color: #fff;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+      margin-bottom: 0.6rem;
+    }
+
+    .hero-content p { color: rgba(255,255,255,0.75); font-size: 1.05rem; margin-bottom: 1.5rem; }
+
+    .primary-btn {
+      display: inline-block;
+      background: var(--gold);
+      color: #fff;
+      padding: 0.8rem 2rem;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      transition: all 0.25s;
+    }
+
+    .primary-btn:hover { background: var(--gold-dark); transform: translateY(-2px); box-shadow: 0 8px 20px rgba(231,155,56,0.35); }
+
+    /* ===== SECTION LABEL ===== */
+    .section-label {
+      display: inline-block;
+      background: var(--gold);
+      color: #fff;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 0.35rem 1rem;
+      border-radius: 50px;
+      margin-bottom: 1rem;
+    }
+
+    /* ===== PRODUCT SECTIONS ===== */
+    .product-section {
+      padding: 5rem 0;
+      position: relative;
+    }
+
+    .product-section:nth-child(odd) { background: var(--white); }
+    .product-section:nth-child(even) { background: var(--gold-light); }
+
+    .product-section .container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 0 2rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    /* image side */
+    .ps-media {
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: var(--card-shadow);
+      position: relative;
+      height: 460px;
+    }
+
+    .ps-media img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .ps-media:hover img { transform: scale(1.04); }
+
+    .media-badge {
+      position: absolute;
+      bottom: 1.2rem; left: 1.2rem;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(8px);
+      border-radius: 10px;
+      padding: 0.6rem 1.1rem;
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--dark);
+      display: flex; align-items: center; gap: 0.4rem;
+    }
+
+    .media-badge i { color: var(--gold); }
+
+    /* text side */
+  
+
+    .ps-content h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(2rem, 3vw, 3rem);
+      font-weight: 600;
+      color: var(--dark);
+      line-height: 1.15;
+      margin-bottom: 1.2rem;
+    }
+
+    .ps-content p {
+      color: var(--muted);
+      font-size: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .ps-features {
+      list-style: none;
+      margin: 1.5rem 0 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+    }
+
+    .ps-features li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.7rem;
+      font-size: 0.95rem;
+      color: var(--text);
+    }
+
+    .ps-features li i {
+      color: var(--gold);
+      margin-top: 3px;
+      flex-shrink: 0;
+    }
+
+    .shop-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--dark);
+      color: #fff;
+      text-decoration: none;
+      padding: 0.75rem 1.8rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: all 0.25s;
+    }
+
+    .shop-link:hover { background: var(--gold); transform: translateX(4px); }
+
+    /* reverse layout for alternating sections */
+    .product-section.reverse .container {
+      direction: rtl;
+    }
+    .product-section.reverse .container > * {
+      direction: ltr;
+    }
+
+    /* ===== FEATURES STRIP ===== */
+    .features-strip {
+      background: var(--dark);
+      padding: 2.5rem 0;
+    }
+
+    .features-strip .container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 0 2rem;
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      justify-content: space-around;
+    }
+
+    .feat-item {
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      color: #fff;
+    }
+
+    .feat-item i { color: var(--gold); font-size: 1.3rem; }
+    .feat-item strong { display: block; font-size: 0.9rem; }
+    .feat-item span { font-size: 0.78rem; color: rgba(255,255,255,0.55); }
+
+    /* ===== FOOTER ===== */
+    footer { background: #e79b38; color: #000; padding: 50px 20px; }
+
+    .footer-container {
+      max-width: 1200px;
+      margin: auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 30px;
+    }
+
+    .footer-col h3 { color: #000; margin-bottom: 15px; font-size: 18px; position: relative; }
+    .footer-col h3::after { content: ''; width: 50px; height: 2px; background: #000; position: absolute; left: 0; bottom: -5px; }
+    .footer-col p { line-height: 1.6; font-size: 14px; }
+    .footer-col ul { list-style: none; }
+    .footer-col ul li { margin: 10px 0; }
+    .footer-col ul li a { text-decoration: none; color: #000; font-size: 14px; transition: 0.3s; }
+    .footer-col ul li a:hover { color: #fff; padding-left: 5px; }
+
+    .social-links a {
+      display: inline-block; width: 35px; height: 35px; line-height: 35px;
+      text-align: center; margin: 0 8px 0 0; border-radius: 50%;
+      background: #000; color: #fff; transition: 0.3s;
+    }
+    .social-links a:hover { background: #fff; color: #ca862c; }
+
+    .newsletter input {
+      padding: 10px; width: 70%; border: none; outline: none;
+      border-radius: 25px 25px; margin-top: 10px;
+    }
+    .newsletter button {
+      padding: 10px 20px; border: none; background: #080808; color: #fff;
+      border-radius: 0 25px 25px; cursor: pointer; margin: 10px; transition: 0.3s;
+    }
+    .newsletter button:hover { background: #fff; color: #c77e23; }
+
+    .footer-bottom {
+      text-align: center; margin-top: 40px; border-top: 1px solid #333;
+      padding-top: 20px; font-size: 14px; color: #000;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 900px) {
+      .product-section .container { grid-template-columns: 1fr; gap: 2rem; }
+      .product-section.reverse .container { direction: ltr; }
+      .ps-media { height: 320px; }
+      .header-content { flex-direction: column; align-items: flex-start; padding: 0.8rem 1.2rem; }
+      .search-wrapper { flex: 1 1 100%; }
+      .nav { display: none; }
+    }
+
+    @media (max-width: 600px) {
+      .hero { height: 45vh; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Toast -->
+<div class="toast-message" id="toastMsg"></div>
+
+<!-- LOGIN MODAL -->
+<div class="modal-overlay" id="loginModal">
+  <div class="login-modal">
+    <button class="modal-close" id="closeModal"><i class="fas fa-times"></i></button>
+    <div class="modal-logo">Kusumira</div>
+    <h3>Welcome back 👋</h3>
+    <p class="subtitle">Sign in to your account to continue</p>
+    <div class="modal-field">
+      <label><i class="fas fa-envelope" style="color:#c77e23; margin-right:5px;"></i> Email Address</label>
+      <input type="email" id="emailInput" placeholder="you@example.com">
+    </div>
+    <div class="modal-field">
+      <label><i class="fas fa-lock" style="color:#c77e23; margin-right:5px;"></i> Password</label>
+      <input type="password" id="passwordInput" placeholder="••••••••">
+    </div>
+    <div class="modal-footer-link"><a href="#">Forgot password?</a></div>
+    <button class="login-submit" id="loginSubmit"><i class="fas fa-sign-in-alt"></i> Sign In</button>
+    <div class="modal-divider">or continue with</div>
+    <div class="social-login">
+      <button><i class="fab fa-google" style="color:#e34234;"></i> Google</button>
+      <button><i class="fab fa-facebook-f" style="color:#1877f2;"></i> Facebook</button>
+    </div>
+    <div class="register-link">Don't have an account? <a href="#">Create one free</a></div>
+  </div>
+</div>
+
+<!-- ===== HEADER ===== -->
+<header class="header">
+  <div class="container header-content">
+    <a href="#" class="logo">kusumira</a>
+
+    <nav class="nav">
+      <a href="index.html">Home</a>
+      <a href="shop.html">Shope</a>
+      <a href="about.html">About</a>
+      <a href="contect.html">Contect</a>
+      
+    </nav>
+
+    <div class="search-wrapper">
+      <div class="search-bar">
+        <input type="text" id="searchInput" placeholder="Search handmade items…" autocomplete="off">
+        <button id="searchBtn"><i class="fas fa-search"></i></button>
+      </div>
+      <div class="search-suggestions" id="searchSuggestions">
+        <div class="suggestion-item"><i class="fas fa-seedling"></i> Eternal Flowers</div>
+        <div class="suggestion-item"><i class="fas fa-fan"></i> Artisan Pots</div>
+        <div class="suggestion-item"><i class="fas fa-heart"></i> Handmade Dolls</div>
+        <div class="suggestion-item"><i class="fas fa-key"></i> Memory Keychains</div>
+        <div class="suggestion-item"><i class="fas fa-gift"></i> Gift Sets</div>
+        <div class="suggestion-item"><i class="fas fa-star"></i> Best Sellers</div>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <button class="login-btn" id="loginBtn"><i class="fas fa-user"></i> Login</button>
+      <button class="cart-btn" id="cartBtn"><i class="fas fa-shopping-basket"></i> Cart</button>
+    </div>
+  </div>
+</header>
+
+<!-- ===== HERO ===== -->
+<section class="hero">
+  <div class="hero-content">
+    <h1>Crafted with Soul</h1>
+    <p>Flowers · Pots · Dolls · Keychains — made slowly, with intention.</p>
+    <a href="#flowers" class="primary-btn">Explore Collection</a>
+  </div>
+</section>
+
+<!-- ===== FEATURES STRIP ===== -->
+<div class="features-strip">
+  <div class="container">
+    <div class="feat-item"><i class="fas fa-leaf"></i><div><strong>Sustainably Sourced</strong><span>Eco-friendly materials</span></div></div>
+    <div class="feat-item"><i class="fas fa-hand-holding-heart"></i><div><strong>Handcrafted</strong><span>Every piece is unique</span></div></div>
+    <div class="feat-item"><i class="fas fa-shipping-fast"></i><div><strong>Fast Delivery</strong><span>3–5 business days</span></div></div>
+    <div class="feat-item"><i class="fas fa-undo"></i><div><strong>Easy Returns</strong><span>30-day hassle-free</span></div></div>
+  </div>
+</div>
+
+<!-- ===== SECTION 1 · FLOWERS ===== -->
+<section class="product-section" id="flowers">
+  <div class="container">
+    <!-- Image left -->
+    <div class="ps-media">
+      <img src="flower.jpeg" alt="Preserved flower arrangement">
+      <div class="media-badge"><i class="fas fa-seedling"></i> Hand-preserved blooms</div>
+    </div>
+    <!-- Text right -->
+    <div class="ps-content">
+      <span class="section-label">01 · Flowers</span>
+      <h2>Eternal Flowers<br>that Never Fade</h2>
+      <p>Our flowers are hand-picked at peak bloom and naturally preserved using a time-honoured process that locks in colour, texture, and fragrance — no watering needed, ever.</p>
+      <p>Whether you want a centrepiece bouquet, a bedside arrangement, or a pressed-flower gift, each design is one-of-a-kind.</p>
+      <ul class="ps-features">
+        <li><i class="fas fa-check-circle"></i> 100% real, naturally preserved petals</li>
+        <li><i class="fas fa-check-circle"></i> Lasts 2–5 years without any care</li>
+        <li><i class="fas fa-check-circle"></i> Custom colour palettes available</li>
+        <li><i class="fas fa-check-circle"></i> Arrives in a gift-ready keepsake box</li>
+      </ul>
+      <a href="#" class="shop-link">Shop Flowers <i class="fas fa-arrow-right"></i></a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SECTION 2 · POTS ===== -->
+<section class="product-section reverse" id="pots">
+  <div class="container">
+    <!-- Image right (reversed layout) -->
+    <div class="ps-media">
+      <img src="image6.jpg" alt="Artisan ceramic pot">
+      <div class="media-badge"><i class="fas fa-fan"></i> Wheel-thrown ceramic</div>
+    </div>
+    <!-- Text left -->
+    <div class="ps-content">
+      <span class="section-label">02 · Pots</span>
+      <h2>Artisan Pots,<br>Shaped by Hand</h2>
+      <p>Thrown on a potter's wheel and finished with non-toxic earth-tone glazes, our ceramic pots breathe warmth into every corner — from tiny succulents to bold statement plants.</p>
+      <p>No two pieces are identical. Each carries the maker's fingerprint, making it a true original for your home or studio.</p>
+      <ul class="ps-features">
+        <li><i class="fas fa-check-circle"></i> Wheel-thrown & kiln-fired stoneware</li>
+        <li><i class="fas fa-check-circle"></i> Food-safe, non-toxic glazes</li>
+        <li><i class="fas fa-check-circle"></i> Drainage hole + cork saucer included</li>
+        <li><i class="fas fa-check-circle"></i> Sizes from 2" mini to 12" statement pot</li>
+      </ul>
+      <a href="#" class="shop-link">Shop Pots <i class="fas fa-arrow-right"></i></a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SECTION 3 · DOLLS ===== -->
+<section class="product-section" id="dolls">
+  <div class="container">
+    <!-- Image left -->
+    <div class="ps-media">
+      <img src="doll.jpg" alt="Handmade fabric doll">
+      <div class="media-badge"><i class="fas fa-heart"></i> Soft & safe for all ages</div>
+    </div>
+    <!-- Text right -->
+    <div class="ps-content">
+      <span class="section-label">03 · Dolls</span>
+      <h2>Handmade Dolls,<br>Full of Character</h2>
+      <p>Sewn stitch by stitch from soft organic cotton and filled with hypoallergenic stuffing, our dolls are heirloom-quality companions that grow up alongside your little ones.</p>
+      <p>Dress them, name them, love them. Personalised versions with custom hair, eyes, or outfits are just an ask away.</p>
+      <ul class="ps-features">
+        <li><i class="fas fa-check-circle"></i> Organic cotton, child-safe dyes</li>
+        <li><i class="fas fa-check-circle"></i> Hypoallergenic stuffing (OEKO-TEX certified)</li>
+        <li><i class="fas fa-check-circle"></i> Custom name tags embroidered on request</li>
+        <li><i class="fas fa-check-circle"></i> Machine washable for easy care</li>
+      </ul>
+      <a href="#" class="shop-link">Shop Dolls <i class="fas fa-arrow-right"></i></a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SECTION 4 · KEYCHAINS ===== -->
+<section class="product-section reverse" id="keychains">
+  <div class="container">
+    <!-- Image right (reversed) -->
+    <div class="ps-media">
+      <img src="keychainmain.jpeg" alt="Handmade leather keychain">
+      <div class="media-badge"><i class="fas fa-key"></i> Personalised available</div>
+    </div>
+    <!-- Text left -->
+    <div class="ps-content">
+      <span class="section-label">04 · Keychains</span>
+      <h2>Memory Keychains,<br>Made to Last</h2>
+      <p>Small tokens, big stories. Our keychains blend hammered brass hardware with braided leather, resin charms, and tiny pressed flowers — each assembled entirely by hand.</p>
+      <p>Carry a little piece of craft wherever you go, or gift one to someone who deserves something truly thoughtful.</p>
+      <ul class="ps-features">
+        <li><i class="fas fa-check-circle"></i> Hammered brass & genuine leather</li>
+        <li><i class="fas fa-check-circle"></i> Ages beautifully with use — a living patina</li>
+        <li><i class="fas fa-check-circle"></i> Custom initials or dates stamped on request</li>
+        <li><i class="fas fa-check-circle"></i> Resin & dried flower variants also available</li>
+      </ul>
+      <a href="#" class="shop-link">Shop Keychains <i class="fas fa-arrow-right"></i></a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="footer-container">
+    <div class="footer-col">
+      <h3>kusumira</h3>
+      <p>Handmade flowers, ceramic pots, dolls and tiny keepsakes — made slowly, with intention.</p>
+      <div class="social-links" style="margin-top:1rem;">
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-pinterest"></i></a>
+        <a href="#"><i class="fab fa-facebook-f"></i></a>
+        <a href="#"><i class="fab fa-x-twitter"></i></a>
+      </div>
+    </div>
+    <div class="footer-col">
+      <h3>Shop</h3>
+      <ul>
+        <li><a href="#">Flowers</a></li>
+        <li><a href="#">Pots</a></li>
+        <li><a href="#">Dolls</a></li>
+        <li><a href="#">Keychains</a></li>
+        <li><a href="#">Gift Sets</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h3>Learn</h3>
+      <ul>
+        <li><a href="#">Our Story</a></li>
+        <li><a href="#">Materials</a></li>
+        <li><a href="#">Care Guide</a></li>
+        <li><a href="#">Wholesale</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h3>News &amp; Offers</h3>
+      <p>Subscribe for early access &amp; studio stories.</p>
+      <div class="newsletter">
+        <input type="email" placeholder="your email">
+        <button type="button"><i class="fas fa-paper-plane"></i></button>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>&copy; 2025 Bloom &amp; Charm — all rights reserved | grown &amp; made with care</p>
+  </div>
+</footer>
+
+<script>
+  const toast = document.getElementById('toastMsg');
+  function showMsg(text) {
+    toast.textContent = text;
+    toast.style.opacity = '1';
+    setTimeout(() => { toast.style.opacity = '0'; }, 2200);
+  }
+
+  document.getElementById('cartBtn').addEventListener('click', () => {
+    window.location.href = 'cart.html';
+  });
+
+  const loginBtn   = document.getElementById('loginBtn');
+  const loginModal = document.getElementById('loginModal');
+  const closeModal = document.getElementById('closeModal');
+
+  loginBtn.addEventListener('click', () => loginModal.classList.add('active'));
+  closeModal.addEventListener('click', () => loginModal.classList.remove('active'));
+  loginModal.addEventListener('click', (e) => { if (e.target === loginModal) loginModal.classList.remove('active'); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') loginModal.classList.remove('active'); });
+
+  document.getElementById('loginSubmit').addEventListener('click', () => {
+    const email = document.getElementById('emailInput').value.trim();
+    if (!email) { showMsg('⚠️ Please enter your email'); return; }
+    loginModal.classList.remove('active');
+    loginBtn.innerHTML = '<i class="fas fa-user-check"></i> Hi, User';
+    showMsg('✅ Logged in successfully!');
+  });
+
+  const searchInput = document.getElementById('searchInput');
+  const suggestions = document.getElementById('searchSuggestions');
+  const searchBtn   = document.getElementById('searchBtn');
+
+  searchInput.addEventListener('focus', () => suggestions.classList.add('show'));
+  document.addEventListener('click', (e) => {
+    if (!e.target.closest('.search-wrapper')) suggestions.classList.remove('show');
+  });
+  document.querySelectorAll('.suggestion-item').forEach(item => {
+    item.addEventListener('click', () => {
+      searchInput.value = item.textContent.trim();
+      suggestions.classList.remove('show');
+      showMsg('🔍 Searching for "' + searchInput.value + '"\u2026');
+    });
+  });
+  searchBtn.addEventListener('click', () => {
+    if (searchInput.value.trim()) showMsg('🔍 Searching for "' + searchInput.value.trim() + '"\u2026');
+    suggestions.classList.remove('show');
+  });
+  searchInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && searchInput.value.trim()) {
+      showMsg('🔍 Searching for "' + searchInput.value.trim() + '"\u2026');
+      suggestions.classList.remove('show');
+    }
+  });
+</script>
+
+</body>
+</html>
